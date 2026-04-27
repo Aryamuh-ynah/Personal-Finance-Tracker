@@ -79,9 +79,6 @@ export default function App() {
     setSaving(false);
   }, []);
 
-
-  
-
   const curMonthKey = monthKey(today());
   const thisMonthExp = expenses.filter(e => monthKey(e.date) === curMonthKey);
   const thisMonthInc = incomes.filter(i => monthKey(i.date) === curMonthKey);
@@ -246,25 +243,46 @@ export default function App() {
           )}
 
           {/* Income Popup */}
-          {showIncPopup && (
-            <div style={{ position: "fixed", inset: 0, background: "#000a", zIndex: 200, display: "flex", alignItems: "flex-end" }} onClick={() => setShowIncPopup(false)}>
-              <div style={{ background: "#1e293b", borderRadius: "16px 16px 0 0", width: "100%", maxHeight: "60vh", overflowY: "auto", padding: 16 }} onClick={e => e.stopPropagation()}>
-                <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 12 }}>💰 This Month's Income</div>
-                {thisMonthInc.length === 0 && <div style={{ color: "#64748b", fontSize: 14 }}>No income this month.</div>}
-                {thisMonthInc.map(i => { const meta = catMeta(i.source, INCOME_SOURCES); return (
-                  <div key={i.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid #334155" }}>
-                    <span style={{ fontSize: 20 }}>{meta.icon}</span>
+          {showIncPopup && (() => {
+            const d = new Date(); d.setMonth(d.getMonth() - 1);
+            const lastKey = monthKey(d.toISOString());
+            const lastInc = incomes.filter(i => monthKey(i.date) === lastKey).reduce((s, i) => s + i.amount, 0);
+            const lastExp = expenses.filter(e => monthKey(e.date) === lastKey).reduce((s, e) => s + e.amount, 0);
+            const carried = lastInc - lastExp;
+            return (
+              <div style={{ position: "fixed", inset: 0, background: "#000a", zIndex: 200, display: "flex", alignItems: "flex-end" }} onClick={() => setShowIncPopup(false)}>
+                <div style={{ background: "#1e293b", borderRadius: "16px 16px 0 0", width: "100%", maxHeight: "60vh", overflowY: "auto", padding: 16 }} onClick={e => e.stopPropagation()}>
+                  <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 12 }}>💰 This Month's Income</div>
+                  {/* Carried forward row */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid #334155", background: carried >= 0 ? "#0f291e" : "#2a0f0f", borderRadius: 8, paddingLeft: 8, marginBottom: 4 }}>
+                    <span style={{ fontSize: 20 }}>🔄</span>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 14 }}>{i.source}{i.note ? ` · ${i.note}` : ""}</div>
-                      <div style={{ fontSize: 11, color: "#64748b" }}>{i.date}</div>
+                      <div style={{ fontSize: 14, fontWeight: 600 }}>Carried Forward</div>
+                      <div style={{ fontSize: 11, color: "#64748b" }}>Last month's leftover ({lastKey})</div>
                     </div>
-                    <span style={{ fontWeight: 700, color: "#22c55e" }}>{fmt(i.amount)}</span>
+                    <span style={{ fontWeight: 700, color: carried >= 0 ? "#22c55e" : "#ef4444" }}>{carried >= 0 ? "+" : ""}{fmt(carried)}</span>
                   </div>
-                );})}
-                <button style={{ ...s.btn("#334155"), marginTop: 14 }} onClick={() => setShowIncPopup(false)}>Close</button>
+                  {thisMonthInc.length === 0 && <div style={{ color: "#64748b", fontSize: 14, marginTop: 8 }}>No income this month.</div>}
+                  {thisMonthInc.map(i => { const meta = catMeta(i.source, INCOME_SOURCES); return (
+                    <div key={i.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid #334155" }}>
+                      <span style={{ fontSize: 20 }}>{meta.icon}</span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 14 }}>{i.source}{i.note ? ` · ${i.note}` : ""}</div>
+                        <div style={{ fontSize: 11, color: "#64748b" }}>{i.date}</div>
+                      </div>
+                      <span style={{ fontWeight: 700, color: "#22c55e" }}>{fmt(i.amount)}</span>
+                    </div>
+                  );})}
+                  {/* Total available */}
+                  <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 0 4px", borderTop: "1px solid #334155", marginTop: 4 }}>
+                    <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 600 }}>Total Available</span>
+                    <span style={{ fontWeight: 700, color: "#22c55e" }}>{fmt(totalIncome + Math.max(carried, 0))}</span>
+                  </div>
+                  <button style={{ ...s.btn("#334155"), marginTop: 10 }} onClick={() => setShowIncPopup(false)}>Close</button>
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Budget Bar */}
           <div style={s.card}>
