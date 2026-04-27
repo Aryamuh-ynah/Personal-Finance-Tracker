@@ -27,7 +27,8 @@ const INCOME_SOURCES = [
 
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const fmt = n => "৳" + Number(n).toLocaleString("en-IN", { minimumFractionDigits: 0 });
-const catMeta = (name, list) => list.find(c => c.name === name) || list[list.length - 1];
+const stripEmoji = str => str.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\s]+/gu, " ").trim();
+const catMeta = (name, list) => list.find(c => c.name === name) || list.find(c => c.name === stripEmoji(name)) || list[list.length - 1];
 const today = () => new Date().toISOString().split("T")[0];
 const monthKey = d => d.slice(0, 7);
 
@@ -59,9 +60,9 @@ export default function App() {
   useEffect(() => {
     (async () => {
       try {
-        const r = await localStorage.getItem("fin_data_v2");
+        const r = await window.storage.get("fin_data_v2");
         if (r) {
-          const d = JSON.parse(r);
+          const d = JSON.parse(r.value);
           setExpenses(d.expenses || []);
           setIncomes(d.incomes || []);
           setBudget(d.budget || 20000);
@@ -74,7 +75,7 @@ export default function App() {
 
   const save = useCallback(async (exps, incs, bud) => {
     setSaving(true);
-    try { await localStorage.setItem("fin_data_v2", JSON.stringify({ expenses: exps, incomes: incs, budget: bud })); }
+    try { await window.storage.set("fin_data_v2", JSON.stringify({ expenses: exps, incomes: incs, budget: bud })); }
     catch (_) {}
     setSaving(false);
   }, []);
@@ -263,11 +264,11 @@ export default function App() {
                     <span style={{ fontWeight: 700, color: carried >= 0 ? "#22c55e" : "#ef4444" }}>{carried >= 0 ? "+" : ""}{fmt(carried)}</span>
                   </div>
                   {thisMonthInc.length === 0 && <div style={{ color: "#64748b", fontSize: 14, marginTop: 8 }}>No income this month.</div>}
-                  {thisMonthInc.map(i => { const meta = catMeta(i.source, INCOME_SOURCES); return (
+                  {thisMonthInc.map(i => { const meta = catMeta(i.source, INCOME_SOURCES); const hasEmoji = /^\p{Emoji}/u.test(i.source.trim()); return (
                     <div key={i.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid #334155" }}>
                       <span style={{ fontSize: 20 }}>{meta.icon}</span>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 14 }}>{i.source}{i.note ? ` · ${i.note}` : ""}</div>
+                        <div style={{ fontSize: 14 }}>{hasEmoji ? stripEmoji(i.source) : i.source}{i.note ? ` · ${i.note}` : ""}</div>
                         <div style={{ fontSize: 11, color: "#64748b" }}>{i.date}</div>
                       </div>
                       <span style={{ fontWeight: 700, color: "#22c55e" }}>{fmt(i.amount)}</span>
@@ -363,7 +364,7 @@ export default function App() {
               <div style={{ marginBottom: 12 }}>
                 <div style={s.label}>Source</div>
                 <select style={s.select} value={incForm.source} onChange={e => setIncForm(f => ({ ...f, source: e.target.value }))}>
-                  {INCOME_SOURCES.map(src => <option key={src.name}>{src.icon} {src.name}</option>)}
+                  {INCOME_SOURCES.map(src => <option key={src.name} value={src.name}>{src.icon} {src.name}</option>)}
                 </select>
               </div>
               <div style={{ marginBottom: 12 }}>
