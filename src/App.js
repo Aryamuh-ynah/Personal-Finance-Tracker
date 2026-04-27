@@ -46,6 +46,8 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
   const [editExpId, setEditExpId] = useState(null);
+  const [showExpPopup, setShowExpPopup] = useState(false);
+  const [showIncPopup, setShowIncPopup] = useState(false);
   const [editIncId, setEditIncId] = useState(null);
   const [incomeView, setIncomeView] = useState("add"); // "add" | "history"
 
@@ -76,6 +78,9 @@ export default function App() {
     catch (_) {}
     setSaving(false);
   }, []);
+
+
+  
 
   const curMonthKey = monthKey(today());
   const thisMonthExp = expenses.filter(e => monthKey(e.date) === curMonthKey);
@@ -207,17 +212,59 @@ export default function App() {
           </div>
 
           <div style={s.row}>
-            <div style={s.halfCard}>
+            <div style={{ ...s.halfCard, cursor: "pointer" }} onClick={() => setShowIncPopup(true)}>
               <div style={{ fontSize: 11, color: "#94a3b8" }}>💰 Income</div>
               <div style={{ fontSize: 20, fontWeight: 700, color: "#22c55e" }}>{fmt(totalIncome)}</div>
               <div style={{ fontSize: 11, color: "#64748b" }}>{thisMonthInc.length} entries</div>
             </div>
-            <div style={s.halfCard}>
+            <div style={{ ...s.halfCard, cursor: "pointer" }} onClick={() => setShowExpPopup(true)}>
               <div style={{ fontSize: 11, color: "#94a3b8" }}>💸 Spent</div>
               <div style={{ fontSize: 20, fontWeight: 700, color: "#f97316" }}>{fmt(totalSpent)}</div>
               <div style={{ fontSize: 11, color: "#64748b" }}>{thisMonthExp.length} transactions</div>
             </div>
           </div>
+
+          {/* Expense Popup */}
+          {showExpPopup && (
+            <div style={{ position: "fixed", inset: 0, background: "#000a", zIndex: 200, display: "flex", alignItems: "flex-end" }} onClick={() => setShowExpPopup(false)}>
+              <div style={{ background: "#1e293b", borderRadius: "16px 16px 0 0", width: "100%", maxHeight: "60vh", overflowY: "auto", padding: 16 }} onClick={e => e.stopPropagation()}>
+                <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 12 }}>💸 This Month's Expenses</div>
+                {thisMonthExp.length === 0 && <div style={{ color: "#64748b", fontSize: 14 }}>No expenses this month.</div>}
+                {thisMonthExp.map(e => { const meta = catMeta(e.category, CATEGORIES); return (
+                  <div key={e.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid #334155" }}>
+                    <span style={{ fontSize: 20 }}>{meta.icon}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 14 }}>{e.category}{e.note ? ` · ${e.note}` : ""}</div>
+                      <div style={{ fontSize: 11, color: "#64748b" }}>{e.date}</div>
+                    </div>
+                    <span style={{ fontWeight: 700, color: "#f97316" }}>{fmt(e.amount)}</span>
+                  </div>
+                );})}
+                <button style={{ ...s.btn("#334155"), marginTop: 14 }} onClick={() => setShowExpPopup(false)}>Close</button>
+              </div>
+            </div>
+          )}
+
+          {/* Income Popup */}
+          {showIncPopup && (
+            <div style={{ position: "fixed", inset: 0, background: "#000a", zIndex: 200, display: "flex", alignItems: "flex-end" }} onClick={() => setShowIncPopup(false)}>
+              <div style={{ background: "#1e293b", borderRadius: "16px 16px 0 0", width: "100%", maxHeight: "60vh", overflowY: "auto", padding: 16 }} onClick={e => e.stopPropagation()}>
+                <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 12 }}>💰 This Month's Income</div>
+                {thisMonthInc.length === 0 && <div style={{ color: "#64748b", fontSize: 14 }}>No income this month.</div>}
+                {thisMonthInc.map(i => { const meta = catMeta(i.source, INCOME_SOURCES); return (
+                  <div key={i.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid #334155" }}>
+                    <span style={{ fontSize: 20 }}>{meta.icon}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 14 }}>{i.source}{i.note ? ` · ${i.note}` : ""}</div>
+                      <div style={{ fontSize: 11, color: "#64748b" }}>{i.date}</div>
+                    </div>
+                    <span style={{ fontWeight: 700, color: "#22c55e" }}>{fmt(i.amount)}</span>
+                  </div>
+                );})}
+                <button style={{ ...s.btn("#334155"), marginTop: 14 }} onClick={() => setShowIncPopup(false)}>Close</button>
+              </div>
+            </div>
+          )}
 
           {/* Budget Bar */}
           <div style={s.card}>
@@ -243,23 +290,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Income by source */}
-          {srcTotals.length > 0 && (
-            <div style={s.card}>
-              <div style={{ fontWeight: 600, marginBottom: 10 }}>Income Sources</div>
-              {srcTotals.map(src => {
-                const meta = catMeta(src.name, INCOME_SOURCES);
-                return (
-                  <div key={src.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span>{meta.icon}</span><span style={{ fontSize: 14 }}>{src.name}</span>
-                    </div>
-                    <span style={{ fontWeight: 600, color: src.color }}>{fmt(src.value)}</span>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+
 
           {/* Spending by category */}
           {catTotals.length > 0 && (
