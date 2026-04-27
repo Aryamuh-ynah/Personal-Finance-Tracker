@@ -35,8 +35,8 @@ A clean, mobile-friendly personal finance tracker built with React. Track your i
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/your-username/finance-tracker.git
-cd finance-tracker
+git clone https://github.com/Aryamuh-ynah/Personal-Finance-Tracker.git
+cd Personal-Finance-Tracker
 ```
 
 ### 2. Install dependencies
