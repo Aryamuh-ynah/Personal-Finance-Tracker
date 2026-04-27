@@ -11,6 +11,7 @@ const CATEGORIES = [
   { name: "Entertainment", icon: "🎮", color: "#06b6d4" },
   { name: "Groceries", icon: "🛒", color: "#84cc16" },
   { name: "Lending", icon: "🤝", color: "#f43f5e" },
+  { name: "Donations", icon: "🤲", color: "#a78bfa" },
   { name: "Other", icon: "📦", color: "#6b7280" },
 ];
 
