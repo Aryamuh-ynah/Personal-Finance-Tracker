@@ -1,70 +1,130 @@
-# Getting Started with Create React App
+# 💸 Personal Finance Tracker (BDT)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A clean, mobile-friendly personal finance tracker built with React. Track your income, expenses, monthly budget, and carried-forward balance — all in one place, with your data saved across sessions.
 
-## Available Scripts
+> 🎙️ **Vibe Coded** — This entire app was built through a conversational AI session using [Claude](https://claude.ai) by Anthropic. No boilerplate, no templates — just vibes and prompts.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## ✨ Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 💰 **Income Tracking** — Log earnings by source (Salary, Freelance, Business, Gift, Investment, Loan Received, etc.)
+- 💸 **Expense Tracking** — Categorize spending (Food, Transport, Bills, Shopping, Health, Education, Groceries, Lending, Donations, and more)
+- 📊 **Dashboard** — Net balance, budget progress bar, pie chart by category, 6-month income vs. spending bar chart
+- 🔄 **Carried Forward** — See last month's leftover balance at the top of your income breakdown
+- 🔔 **Budget Alerts** — Warning at 80% usage, red alert when over budget
+- 📋 **History** — Filter expenses by month and category
+- ✏️ **Edit & Delete** — Full CRUD on both income and expense entries
+- 💾 **Persistent Storage** — Data is saved across sessions via Claude's storage API
+- 🇧🇩 **BDT (৳ Taka)** default currency
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 🛠️ Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+| Tool               | Purpose                         |
+| ------------------ | ------------------------------- |
+| React (Hooks)      | UI & state management           |
+| Recharts           | Pie chart & bar chart           |
+| Claude Storage API | Session-persistent data storage |
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🚀 Running Locally
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 1. Clone the repo
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+git clone https://github.com/your-username/finance-tracker.git
+cd finance-tracker
+```
 
-### `npm run eject`
+### 2. Install dependencies
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npx create-react-app .
+npm install recharts
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 3. Replace `src/App.js`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Paste the full component code into `src/App.js`.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 4. Replace Claude Storage with localStorage
 
-## Learn More
+The app uses `window.storage` (Claude-specific API). For local use, swap it out:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**Loading:**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```js
+const raw = localStorage.getItem("fin_data_v2");
+if (raw) {
+  const d = JSON.parse(raw);
+  setExpenses(d.expenses || []);
+  setIncomes(d.incomes || []);
+  setBudget(d.budget || 20000);
+}
+```
 
-### Code Splitting
+**Saving:**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```js
+localStorage.setItem(
+  "fin_data_v2",
+  JSON.stringify({ expenses: exps, incomes: incs, budget: bud }),
+);
+```
 
-### Analyzing the Bundle Size
+### 5. Start the app
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+npm start
+```
 
-### Making a Progressive Web App
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+## 📁 Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```
+finance-tracker/
+├── src/
+│   └── App.js        ← entire app lives here
+├── public/
+└── package.json
+```
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 📸 Screens
 
-### `npm run build` fails to minify
+| Dashboard                   | Add Income                 | Expense History            |
+| --------------------------- | -------------------------- | -------------------------- |
+| Net balance, charts, budget | Source, amount, date, note | Filter by month & category |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+## 🗂️ Expense Categories
+
+🍔 Food · 🚌 Transport · 💡 Bills · 🛍️ Shopping · 💊 Health · 📚 Education · 🎮 Entertainment · 🛒 Groceries · 🤝 Lending · 🤲 Donations · 📦 Other
+
+## 💰 Income Sources
+
+💼 Salary · 💻 Freelance · 🏪 Business · 🎁 Gift · 📈 Investment · 🏦 Loan Received · 💰 Other
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome! If you'd like to add features (CSV export, savings goals, dark/light toggle), feel free to fork and open a PR.
+
+---
+
+## 📄 License
+
+MIT License — free to use, modify, and distribute.
+
+---
+
+> Built with ❤️ and good vibes using [Claude AI](https://claude.ai) — proof that you don't need to write code to build something useful.
