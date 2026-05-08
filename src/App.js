@@ -60,9 +60,9 @@ export default function App() {
   useEffect(() => {
     (async () => {
       try {
-        const r = await window.storage.get("fin_data_v2");
+        const r = await localStorage.getItem("fin_data_v2");
         if (r) {
-          const d = JSON.parse(r.value);
+          const d = JSON.parse(r);
           setExpenses(d.expenses || []);
           setIncomes(d.incomes || []);
           setBudget(d.budget || 20000);
@@ -75,7 +75,7 @@ export default function App() {
 
   const save = useCallback(async (exps, incs, bud) => {
     setSaving(true);
-    try { await window.storage.set("fin_data_v2", JSON.stringify({ expenses: exps, incomes: incs, budget: bud })); }
+    try { await localStorage.setItem("fin_data_v2", JSON.stringify({ expenses: exps, incomes: incs, budget: bud })); }
     catch (_) {}
     setSaving(false);
   }, []);

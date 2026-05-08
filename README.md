@@ -50,32 +50,7 @@ npm install recharts
 
 Paste the full component code into `src/App.js`.
 
-### 4. Replace Claude Storage with localStorage
-
-The app uses `window.storage` (Claude-specific API). For local use, swap it out:
-
-**Loading:**
-
-```js
-const raw = localStorage.getItem("fin_data_v2");
-if (raw) {
-  const d = JSON.parse(raw);
-  setExpenses(d.expenses || []);
-  setIncomes(d.incomes || []);
-  setBudget(d.budget || 20000);
-}
-```
-
-**Saving:**
-
-```js
-localStorage.setItem(
-  "fin_data_v2",
-  JSON.stringify({ expenses: exps, incomes: incs, budget: bud }),
-);
-```
-
-### 5. Start the app
+### 4. Start the app
 
 ```bash
 npm start
