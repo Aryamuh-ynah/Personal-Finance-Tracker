@@ -1,8 +1,8 @@
 # 💸 Personal Finance Tracker (BDT)
 
-A clean, mobile-friendly personal finance tracker built with React. Track your income, expenses, monthly budget, and carried-forward balance — all in one place, with your data saved across sessions.
+A clean, mobile-friendly personal finance tracker built with React. Track your income, expenses, monthly budget, and carried-forward balance — all in one place, with your data saved in your browser across sessions.
 
-> 🎙️ **Vibe Coded** — This entire app was built through a conversational AI session using [Claude](https://claude.ai) by Anthropic. No boilerplate, no templates — just vibes and prompts.
+> 🎙️ **Vibe Coded** — This app started through a conversational AI session using [Claude](https://claude.ai) by Anthropic and was refined into a React project.
 
 ---
 
@@ -15,18 +15,18 @@ A clean, mobile-friendly personal finance tracker built with React. Track your i
 - 🔔 **Budget Alerts** — Warning at 80% usage, red alert when over budget
 - 📋 **History** — Filter expenses by month and category
 - ✏️ **Edit & Delete** — Full CRUD on both income and expense entries
-- 💾 **Persistent Storage** — Data is saved across sessions via Claude's storage API
+- 💾 **Persistent Storage** — Data is saved across sessions with browser `localStorage`
 - 🇧🇩 **BDT (৳ Taka)** default currency
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Tool               | Purpose                         |
-| ------------------ | ------------------------------- |
-| React (Hooks)      | UI & state management           |
-| Recharts           | Pie chart & bar chart           |
-| Claude Storage API | Session-persistent data storage |
+| Tool          | Purpose                              |
+| ------------- | ------------------------------------ |
+| React (Hooks) | UI & state management                |
+| Recharts      | Pie chart & bar chart                |
+| localStorage  | Browser-based persistent data storage |
 
 ---
 
@@ -42,15 +42,10 @@ cd Personal-Finance-Tracker
 ### 2. Install dependencies
 
 ```bash
-npx create-react-app .
-npm install recharts
+npm install
 ```
 
-### 3. Replace `src/App.js`
-
-Paste the full component code into `src/App.js`.
-
-### 4. Start the app
+### 3. Start the app
 
 ```bash
 npm start
@@ -62,11 +57,16 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 📁 Project Structure
 
-```
+```text
 finance-tracker/
-├── src/
-│   └── App.js        ← entire app lives here
 ├── public/
+├── src/
+│   ├── components/       # Dashboard, forms, history, nav, toast
+│   ├── constants/        # Categories, income sources, storage key
+│   ├── styles/           # Shared inline style object
+│   ├── utils/            # Formatting, dates, localStorage helpers
+│   ├── App.js            # App state and page wiring
+│   └── index.js
 └── package.json
 ```
 
@@ -102,4 +102,4 @@ MIT License — free to use, modify, and distribute.
 
 ---
 
-> Built with ❤️ and good vibes using [Claude AI](https://claude.ai) — proof that you don't need to write code to build something useful.
+> Built with ❤️ and good vibes using [Claude AI](https://claude.ai) and React.
