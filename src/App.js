@@ -63,8 +63,21 @@ export default function App() {
         const r = await localStorage.getItem("fin_data_v2");
         if (r) {
           const d = JSON.parse(r);
-          setExpenses(d.expenses || []);
-          setIncomes(d.incomes || []);
+
+          setExpenses(
+            (d.expenses || []).map(e => ({
+              ...e,
+              category: stripEmoji(e.category),
+            }))
+          );
+
+          setIncomes(
+            (d.incomes || []).map(i => ({
+              ...i,
+              source: stripEmoji(i.source),
+            }))
+          );
+
           setBudget(d.budget || 20000);
           setBudgetInput(String(d.budget || 20000));
         }
@@ -228,16 +241,39 @@ export default function App() {
               <div style={{ background: "#1e293b", borderRadius: "16px 16px 0 0", width: "100%", maxHeight: "60vh", overflowY: "auto", padding: 16 }} onClick={e => e.stopPropagation()}>
                 <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 12 }}>💸 This Month's Expenses</div>
                 {thisMonthExp.length === 0 && <div style={{ color: "#64748b", fontSize: 14 }}>No expenses this month.</div>}
-                {thisMonthExp.map(e => { const meta = catMeta(e.category, CATEGORIES); return (
-                  <div key={e.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid #334155" }}>
-                    <span style={{ fontSize: 20 }}>{meta.icon}</span>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 14 }}>{e.category}{e.note ? ` · ${e.note}` : ""}</div>
-                      <div style={{ fontSize: 11, color: "#64748b" }}>{e.date}</div>
+                {thisMonthExp.map(e => {
+                  const cleanCategory = stripEmoji(e.category);
+                  const meta = catMeta(cleanCategory, CATEGORIES);
+
+                  return (
+                    <div
+                      key={e.id}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                        padding: "8px 0",
+                        borderBottom: "1px solid #334155",
+                      }}
+                    >
+                      <span style={{ fontSize: 20 }}>{meta.icon}</span>
+
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 14 }}>
+                          {cleanCategory}
+                          {e.note ? ` · ${e.note}` : ""}
+                        </div>
+                        <div style={{ fontSize: 11, color: "#64748b" }}>
+                          {e.date}
+                        </div>
+                      </div>
+
+                      <span style={{ fontWeight: 700, color: "#f97316" }}>
+                        {fmt(e.amount)}
+                      </span>
                     </div>
-                    <span style={{ fontWeight: 700, color: "#f97316" }}>{fmt(e.amount)}</span>
-                  </div>
-                );})}
+                  );
+                })}
                 <button style={{ ...s.btn("#334155"), marginTop: 14 }} onClick={() => setShowExpPopup(false)}>Close</button>
               </div>
             </div>
@@ -430,7 +466,11 @@ export default function App() {
             <div style={{ marginBottom: 12 }}>
               <div style={s.label}>Category</div>
               <select style={s.select} value={expForm.category} onChange={e => setExpForm(f => ({ ...f, category: e.target.value }))}>
-                {CATEGORIES.map(c => <option key={c.name}>{c.icon} {c.name}</option>)}
+                {CATEGORIES.map(c => (
+  <option key={c.name} value={c.name}>
+    {c.icon} {c.name}
+  </option>
+))}
               </select>
             </div>
             <div style={{ marginBottom: 12 }}>
@@ -496,3 +536,4 @@ export default function App() {
     </div>
   );
 }
+
