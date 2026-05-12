@@ -1,19 +1,38 @@
-import { DEFAULT_BUDGET, STORAGE_KEY } from "../constants/finance";
+import { DEFAULT_CATEGORY_BUDGETS, DEFAULT_DATA, DEFAULT_SETTINGS } from "../constants/finance";
+
+const STORAGE_KEY = "fin_data_v2";
 
 export function loadFinanceData() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) {
-    return { expenses: [], incomes: [], budget: DEFAULT_BUDGET };
-  }
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return DEFAULT_DATA;
 
-  const data = JSON.parse(raw);
-  return {
-    expenses: data.expenses || [],
-    incomes: data.incomes || [],
-    budget: data.budget || DEFAULT_BUDGET,
-  };
+    const parsed = JSON.parse(raw);
+
+    return {
+      ...DEFAULT_DATA,
+      ...parsed,
+      categoryBudgets: {
+        ...DEFAULT_CATEGORY_BUDGETS,
+        ...(parsed.categoryBudgets || {}),
+      },
+      settings: {
+        ...DEFAULT_SETTINGS,
+        ...(parsed.settings || {}),
+      },
+      recurringTransactions: parsed.recurringTransactions || [],
+      version: 2,
+    };
+  } catch {
+    return DEFAULT_DATA;
+  }
 }
 
-export function saveFinanceData(expenses, incomes, budget) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ expenses, incomes, budget }));
+export function saveFinanceData(data) {
+  const dataToSave = {
+    ...data,
+    lastUpdated: new Date().toISOString(),
+  };
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
 }
