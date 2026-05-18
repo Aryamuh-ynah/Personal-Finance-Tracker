@@ -5,7 +5,6 @@ import ExpensePage from "./components/ExpensePage";
 import Header from "./components/Header";
 import HistoryPage from "./components/HistoryPage";
 import IncomePage from "./components/IncomePage";
-import SettingsPage from "./components/SettingsPage";
 import Toast from "./components/Toast";
 import { CATEGORIES, DEFAULT_BUDGET, MONTHS } from "./constants/finance";
 import { styles } from "./styles/appStyles";
@@ -180,27 +179,6 @@ export default function App() {
     ? <div style={{ background: "#7f1d1d", color: "#fca5a5", padding: "8px 16px", fontSize: 13, fontWeight: 600 }}>🚨 Over budget by {fmt(Math.abs(remaining))}!</div>
     : nearBudget ? <div style={{ background: "#78350f", color: "#fcd34d", padding: "8px 16px", fontSize: 13, fontWeight: 600 }}>⚠️ Used {Math.round(pct)}% of budget — be careful!</div> : null;
 
-  const updateSettings = (partialSettings) => {
-    setData((prev) => ({
-      ...prev,
-      settings: {
-        ...prev.settings,
-        ...partialSettings,
-      },
-    }));
-  };
-
-  const updateCategoryBudget = (category, amount) => {
-    setData((prev) => ({
-      ...prev,
-      categoryBudgets: {
-        ...prev.categoryBudgets,
-        [category]: amount,
-      },
-    }));
-  };
-
-
   return (
     <div style={styles.app}>
       <Toast toast={toast} />
@@ -257,16 +235,6 @@ export default function App() {
           startEditExp={startEditExp}
           deleteExpense={deleteExpense}
           styles={styles}
-        />
-      )}
-      {tab === "settings" && (
-        <SettingsPage
-          settings={data.settings}
-          onUpdateSettings={updateSettings}
-          categoryBudgets={data.categoryBudgets}
-          onUpdateCategoryBudget={updateCategoryBudget}
-          onExportBackup={exportBackup}
-          onImportBackup={importBackup}
         />
       )}
 

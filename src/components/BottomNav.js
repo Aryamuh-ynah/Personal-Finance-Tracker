@@ -3,7 +3,6 @@ const NAV_ITEMS = [
   ["income", "💰", "Income"],
   ["expenses", "➕", "Expense"],
   ["history", "📋", "History"],
-  ["settings","⚙️","Settings"]
 ];
 
 export default function BottomNav({ tab, setTab, styles }) {
