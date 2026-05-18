@@ -227,6 +227,7 @@ export default function App() {
       {tab === "history" && (
         <HistoryPage
           filteredExp={filteredExp}
+          filteredInc={filteredInc}      // new
           filterMonth={filterMonth}
           setFilterMonth={setFilterMonth}
           filterCat={filterCat}
@@ -234,6 +235,8 @@ export default function App() {
           allMonths={allMonths}
           startEditExp={startEditExp}
           deleteExpense={deleteExpense}
+          startEditInc={startEditInc}    // new
+          deleteIncome={deleteIncome}    // new
           styles={styles}
         />
       )}
