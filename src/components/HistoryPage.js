@@ -18,16 +18,16 @@ export default function HistoryPage({
 }) {
   const [typeFilter, setTypeFilter] = useState("Expenses");
 
-  // Helper to get meta info for expenses
-  const getExpenseMeta = (category) => CATEGORIES.find(c => c.name === category) || { icon: "📦", color: "#6b7280" };
-  // Helper to get meta info for incomes
-  const getIncomeMeta = (source) => INCOME_SOURCES.find(s => s.name === source) || { icon: "💰", color: "#6b7280" };
+  const getExpenseMeta = (category) =>
+    CATEGORIES.find(c => c.name === category) || { icon: "📦", color: "#6b7280" };
+  const getIncomeMeta = (source) =>
+    INCOME_SOURCES.find(s => s.name === source) || { icon: "💰", color: "#6b7280" };
 
   return (
     <div style={{ padding: 16 }}>
       {/* Top filters */}
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-        {/* Month selector */}
+        {/* Month */}
         <select
           style={{ ...styles.select, flex: 1 }}
           value={filterMonth}
@@ -37,7 +37,8 @@ export default function HistoryPage({
             <option key={month} value={month}>{month}</option>
           ))}
         </select>
-        {/* Type selector */}
+
+        {/* Type */}
         <select
           style={{ ...styles.select, flex: 1 }}
           value={typeFilter}
@@ -46,7 +47,8 @@ export default function HistoryPage({
           <option value="Expenses">Expenses</option>
           <option value="Income">Income</option>
         </select>
-        {/* Category selector only for expenses */}
+
+        {/* Category / Source */}
         {typeFilter === "Expenses" && (
           <select
             style={{ ...styles.select, flex: 1 }}
@@ -54,21 +56,29 @@ export default function HistoryPage({
             onChange={(e) => setFilterCat(e.target.value)}
           >
             <option>All</option>
-            {CATEGORIES.map((category) => <option key={category.name}>{category.name}</option>)}
+            {CATEGORIES.map(c => <option key={c.name}>{c.name}</option>)}
           </select>
         )}
-
-
+        {typeFilter === "Income" && (
+          <select
+            style={{ ...styles.select, flex: 1 }}
+            value={filterCat}
+            onChange={(e) => setFilterCat(e.target.value)}
+          >
+            <option>All</option>
+            {INCOME_SOURCES.map(s => <option key={s.name}>{s.name}</option>)}
+          </select>
+        )}
       </div>
 
-      {/* Expenses */}
+      {/* Expenses Table */}
       {typeFilter === "Expenses" && (
         <>
           <div style={{ padding: "8px 0", color: "#94a3b8", fontSize: 13 }}>
             {filteredExp.length} expense transactions · {fmt(filteredExp.reduce((sum, e) => sum + e.amount, 0))} spent
           </div>
           {filteredExp.length === 0 && <div style={{ textAlign: "center", color: "#64748b", padding: 40 }}>No expenses found.</div>}
-          {filteredExp.map((expense) => {
+          {filteredExp.map(expense => {
             const meta = getExpenseMeta(expense.category);
             return (
               <div key={expense.id} style={styles.item}>
@@ -92,14 +102,14 @@ export default function HistoryPage({
         </>
       )}
 
-      {/* Income */}
+      {/* Income Table */}
       {typeFilter === "Income" && (
         <>
           <div style={{ padding: "8px 0", color: "#94a3b8", fontSize: 13 }}>
             {filteredInc.length} income transactions · {fmt(filteredInc.reduce((sum, i) => sum + i.amount, 0))} received
           </div>
           {filteredInc.length === 0 && <div style={{ textAlign: "center", color: "#64748b", padding: 40 }}>No incomes found.</div>}
-          {filteredInc.map((income) => {
+          {filteredInc.map(income => {
             const meta = getIncomeMeta(income.source);
             return (
               <div key={income.id} style={styles.item}>
