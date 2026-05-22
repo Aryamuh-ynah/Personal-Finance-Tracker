@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import "./App.css";
 import BottomNav from "./components/BottomNav";
 import Dashboard from "./components/Dashboard";
 import ExpensePage from "./components/ExpensePage";
@@ -10,7 +11,6 @@ import { CATEGORIES, DEFAULT_BUDGET, MONTHS } from "./constants/finance";
 import { styles } from "./styles/appStyles";
 import { fmt, monthKey, today } from "./utils/finance";
 import { loadFinanceData, saveFinanceData } from "./utils/storage";
-
 const emptyExpenseForm = () => ({ amount: "", category: "Food", date: today(), note: "" });
 const emptyIncomeForm = () => ({ amount: "", source: "Salary", date: today(), note: "" });
 
@@ -35,6 +35,7 @@ export default function App() {
   const [showIncPopup, setShowIncPopup] = useState(false);
   const [editIncId, setEditIncId] = useState(null);
   const [incomeView, setIncomeView] = useState("add");
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   const showToast = (msg, type = "success") => {
     setToast({ msg, type });
@@ -120,33 +121,49 @@ export default function App() {
   };
 
   const deleteExpense = (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this expense?"
-    );
-
-    if (!confirmDelete) return;
-
-    const nextExpenses = expenses.filter((expense) => expense.id !== id);
-
-    if (!save(nextExpenses, incomes, budget)) return;
-
-    setExpenses(nextExpenses);
-    showToast("Expense deleted", "error");
+    setDeleteConfirm({
+      type: "expense",
+      id,
+      title: "Delete Expense?",
+      message: "Are you sure you want to delete this expense?",
+    });
   };
   const deleteIncome = (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this income?"
-    );
-
-    if (!confirmDelete) return;
-
-    const nextIncomes = incomes.filter((income) => income.id !== id);
-
-    if (!save(expenses, nextIncomes, budget)) return;
-
-    setIncomes(nextIncomes);
-    showToast("Income deleted", "error");
+    setDeleteConfirm({
+      type: "income",
+      id,
+      title: "Delete Income?",
+      message: "Are you sure you want to delete this income?",
+    });
   };
+
+  const confirmDelete = () => {
+    if (!deleteConfirm) return;
+
+    if (deleteConfirm.type === "expense") {
+      const nextExpenses = expenses.filter(
+        (expense) => expense.id !== deleteConfirm.id
+      );
+
+      if (!save(nextExpenses, incomes, budget)) return;
+
+      setExpenses(nextExpenses);
+      showToast("Expense deleted", "error");
+    }
+
+    if (deleteConfirm.type === "income") {
+      const nextIncomes = incomes.filter(
+        (income) => income.id !== deleteConfirm.id
+      );
+
+      if (!save(expenses, nextIncomes, budget)) return;
+
+      setIncomes(nextIncomes);
+      showToast("Income deleted", "error");
+    }
+
+    setDeleteConfirm(null);
+  };  
 
   const cancelEditExpense = () => {
     setEditExpId(null);
@@ -288,6 +305,35 @@ export default function App() {
       )}
 
       <BottomNav tab={tab} setTab={setTab} styles={styles} />
+
+      {deleteConfirm && (
+        <div className="delete-modal-overlay">
+          <div className="delete-modal">
+            <h3>{deleteConfirm.title}</h3>
+
+            <p>{deleteConfirm.message}</p>
+
+            <div className="delete-modal-actions">
+              <button
+                type="button"
+                className="delete-cancel-btn"
+                onClick={() => setDeleteConfirm(null)}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                className="delete-confirm-btn"
+                onClick={confirmDelete}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
