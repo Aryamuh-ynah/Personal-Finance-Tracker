@@ -307,25 +307,33 @@ export default function App() {
       <BottomNav tab={tab} setTab={setTab} styles={styles} />
 
       {deleteConfirm && (
-        <div className="delete-modal-overlay">
-          <div className="delete-modal">
-            <h3>{deleteConfirm.title}</h3>
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/75 p-5">
+          <div className="w-full max-w-[380px] rounded-2xl border border-slate-700 bg-slate-800 p-6 text-center shadow-2xl">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-500/15 text-3xl">
+              🗑️
+            </div>
 
-            <p>{deleteConfirm.message}</p>
+            <h3 className="mb-2 text-xl font-bold text-slate-50">
+              {deleteConfirm.title}
+            </h3>
 
-            <div className="delete-modal-actions">
+            <p className="mb-6 text-sm leading-6 text-slate-300">
+              {deleteConfirm.message}
+            </p>
+
+            <div className="flex gap-3">
               <button
                 type="button"
-                className="delete-cancel-btn"
                 onClick={() => setDeleteConfirm(null)}
+                className="flex-1 rounded-xl border border-slate-600 bg-slate-950 px-4 py-3 text-sm font-bold text-slate-200 hover:bg-slate-700"
               >
                 Cancel
               </button>
 
               <button
                 type="button"
-                className="delete-confirm-btn"
                 onClick={confirmDelete}
+                className="flex-1 rounded-xl bg-red-500 px-4 py-3 text-sm font-bold text-white hover:bg-red-600"
               >
                 Delete
               </button>
