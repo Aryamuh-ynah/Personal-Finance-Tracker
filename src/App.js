@@ -35,7 +35,7 @@ export default function App() {
   const [showExpPopup, setShowExpPopup] = useState(false);
   const [showIncPopup, setShowIncPopup] = useState(false);
   const [editIncId, setEditIncId] = useState(null);
-  const [ setIncomeView] = useState("add");
+
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [themeId, setThemeId] = useState(() => {
     return localStorage.getItem("themeId") || DEFAULT_THEME_ID;
@@ -90,11 +90,19 @@ export default function App() {
   const curMonthKey = monthKey(today());
   const thisMonthExp = expenses.filter((expense) => monthKey(expense.date) === curMonthKey);
   const thisMonthInc = incomes.filter((income) => monthKey(income.date) === curMonthKey);
-  const totalSpent = thisMonthExp.reduce((sum, expense) => sum + expense.amount, 0);
-  const totalIncome = thisMonthInc.reduce((sum, income) => sum + income.amount, 0);
+  const totalSpent = thisMonthExp.reduce(
+    (sum, expense) => sum + Number(expense.amount || 0),
+    0
+  );
+
+  const totalIncome = thisMonthInc.reduce(
+    (sum, income) => sum + Number(income.amount || 0),
+    0
+  );
   const netBalance = totalIncome - totalSpent;
-  const remaining = budget - totalSpent;
-  const pct = Math.min((totalSpent / budget) * 100, 100);
+  const safeBudget = Number(budget) || 0;
+  const remaining = safeBudget - totalSpent;
+  const pct = safeBudget > 0 ? Math.min((totalSpent / safeBudget) * 100, 100) : 0;
   const overBudget = totalSpent > budget;
   const nearBudget = !overBudget && pct >= 80;
 
@@ -193,9 +201,13 @@ export default function App() {
 
   const startEditInc = (income) => {
     setEditIncId(income.id);
-    setIncForm({ amount: String(income.amount), source: income.source, date: income.date, note: income.note || "" });
+    setIncForm({
+      amount: String(income.amount),
+      source: income.source,
+      date: income.date,
+      note: income.note || "",
+    });
     setTab("income");
-    setIncomeView("add");
   };
   const saveBudget = () => {
     const nextBudget = parseFloat(budgetInput);

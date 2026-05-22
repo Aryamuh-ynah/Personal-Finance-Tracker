@@ -79,7 +79,7 @@ function IncomePopup({ isOpen, onClose, incomes, expenses, currentMonthIncomes, 
 
 export default function Dashboard({ data, budgetState, popupState, styles }) {
   const { netBalance, totalIncome, totalSpent, thisMonthExp, thisMonthInc, catTotals, last6 } = data;
-  const { budget, budgetInput, editBudget, setBudgetInput, setEditBudget, saveBudget, remaining, pct, overBudget, nearBudget } = budgetState;
+  const { budget } = budgetState;
   const { showExpPopup, setShowExpPopup, showIncPopup, setShowIncPopup, expenses, incomes } = popupState;
 
   return (
@@ -106,7 +106,7 @@ export default function Dashboard({ data, budgetState, popupState, styles }) {
       <ExpensesPopup isOpen={showExpPopup} onClose={() => setShowExpPopup(false)} expenses={thisMonthExp} styles={styles} />
       <IncomePopup isOpen={showIncPopup} onClose={() => setShowIncPopup(false)} incomes={incomes} expenses={expenses} currentMonthIncomes={thisMonthInc} totalIncome={totalIncome} styles={styles} />
 
-      <BudgetCard budget={budget} budgetInput={budgetInput} editBudget={editBudget} setBudgetInput={setBudgetInput} setEditBudget={setEditBudget} saveBudget={saveBudget} totalSpent={totalSpent} remaining={remaining} pct={pct} overBudget={overBudget} nearBudget={nearBudget} styles={styles} />
+      <BudgetCard budget={budget} totalSpent={totalSpent} styles={styles} />
 
       {catTotals.length > 0 && (
         <div style={styles.card}>
