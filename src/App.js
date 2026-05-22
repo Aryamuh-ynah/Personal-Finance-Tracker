@@ -40,6 +40,10 @@ export default function App() {
   const [themeId, setThemeId] = useState(() => {
     return localStorage.getItem("themeId") || DEFAULT_THEME_ID;
   });
+  const [appearance, setAppearance] = useState(() => {
+    return localStorage.getItem("appearance") || "dark";
+  });
+  
 
   const styles = useMemo(() => createStyles(themeId), [themeId]);
   const showToast = (msg, type = "success") => {
@@ -70,7 +74,9 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("themeId", themeId);
   }, [themeId]);
-
+  useEffect(() => {
+    localStorage.setItem("appearance", appearance);
+  }, [appearance]);
 
   const save = useCallback((nextExpenses, nextIncomes, nextBudget) => {
     setSaving(true);
@@ -268,7 +274,7 @@ export default function App() {
     : nearBudget ? <div style={{ background: "#78350f", color: "#fcd34d", padding: "8px 16px", fontSize: 13, fontWeight: 600 }}>⚠️ Used {Math.round(pct)}% of budget — be careful!</div> : null;
 
   return (
-    <div data-theme={themeId} style={styles.app}>
+    <div data-theme={themeId} data-appearance={appearance} style={styles.app}>
       <Toast toast={toast} />
       <Header saving={saving} styles={styles} />
       {alertBar}
@@ -320,10 +326,13 @@ export default function App() {
           styles={styles}
         />
       )}
+      
       {tab === "settings" && (
         <SettingsPage
           themeId={themeId}
           setThemeId={setThemeId}
+          appearance={appearance}
+          setAppearance={setAppearance}
           budgetInput={budgetInput}
           setBudgetInput={setBudgetInput}
           saveBudget={saveBudget}
@@ -333,7 +342,6 @@ export default function App() {
           styles={styles}
         />
       )}
-
 
       <BottomNav tab={tab} setTab={setTab} styles={styles} />
 

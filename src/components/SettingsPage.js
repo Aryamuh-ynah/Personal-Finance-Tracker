@@ -1,8 +1,25 @@
 import { THEMES } from "../styles/appStyles";
 
+const APPEARANCE_OPTIONS = [
+  {
+    id: "dark",
+    icon: "🌙",
+    title: "Dark Mode",
+    description: "Modern dark interface",
+  },
+  {
+    id: "light",
+    icon: "☀️",
+    title: "Light Mode",
+    description: "Clean bright interface",
+  },
+];
+
 export default function SettingsPage({
   themeId,
   setThemeId,
+  appearance,
+  setAppearance,
   budgetInput,
   setBudgetInput,
   saveBudget,
@@ -15,8 +32,42 @@ export default function SettingsPage({
     <main className="settings-page">
       <h2 className="settings-title">Settings</h2>
       <p className="settings-subtitle">
-        Manage your app theme and monthly budget.
+        Manage your app appearance, theme, and monthly budget.
       </p>
+
+      <h3
+        style={{
+          margin: "0 0 10px",
+          fontSize: 18,
+          fontWeight: 800,
+          color: "var(--text-main)",
+        }}
+      >
+        🌓 Appearance
+      </h3>
+
+      <div className="appearance-grid">
+        {APPEARANCE_OPTIONS.map((option) => {
+          const active = appearance === option.id;
+
+          return (
+            <button
+              key={option.id}
+              type="button"
+              onClick={() => setAppearance(option.id)}
+              className={`appearance-card ${
+                active ? "appearance-card-active" : ""
+              }`}
+            >
+              <div className="appearance-icon">{option.icon}</div>
+              <div className="appearance-title">{option.title}</div>
+              <div className="appearance-description">
+                {option.description}
+              </div>
+            </button>
+          );
+        })}
+      </div>
 
       <section style={styles.card}>
         <div style={{ fontWeight: 700, fontSize: 17, marginBottom: 14 }}>
@@ -62,7 +113,11 @@ export default function SettingsPage({
               />
             </div>
 
-            <button type="button" style={styles.btn("#22c55e")} onClick={saveBudget}>
+            <button
+              type="button"
+              style={styles.btn("#22c55e")}
+              onClick={saveBudget}
+            >
               Save Budget
             </button>
 
@@ -88,7 +143,7 @@ export default function SettingsPage({
           color: "var(--text-main)",
         }}
       >
-        🎨 Themes
+        🎨 Color Theme
       </h3>
 
       <div className="theme-grid">
