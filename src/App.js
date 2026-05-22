@@ -44,13 +44,17 @@ export default function App() {
   useEffect(() => {
     try {
       const data = loadFinanceData();
+
       setExpenses(data.expenses);
       setIncomes(data.incomes);
       setBudget(data.budget);
       setBudgetInput(String(data.budget));
-    } catch (_) {}
-
-    setLoading(false);
+    } catch (error) {
+      console.error("Failed to load finance data:", error);
+      showToast("Could not load saved data. Using default data.", "error");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -62,9 +66,14 @@ export default function App() {
 
     try {
       saveFinanceData(nextExpenses, nextIncomes, nextBudget);
-    } catch (_) {}
-
-    setSaving(false);
+      return true;
+    } catch (error) {
+      console.error("Failed to save finance data:", error);
+      showToast("Could not save data. Please try again.", "error");
+      return false;
+    } finally {
+      setSaving(false);
+    }
   }, []);
 
   const curMonthKey = monthKey(today());
@@ -86,8 +95,9 @@ export default function App() {
       ? expenses.map((expense) => expense.id === editExpId ? { ...expense, ...expForm, amount } : expense)
       : [{ id: Date.now(), ...expForm, amount }, ...expenses];
 
+    if (!save(nextExpenses, incomes, budget)) return;
+
     setExpenses(nextExpenses);
-    save(nextExpenses, incomes, budget);
     setEditExpId(null);
     setExpForm(emptyExpenseForm());
     showToast(editExpId ? "Expense updated!" : "Expense added!");
@@ -101,8 +111,9 @@ export default function App() {
       ? incomes.map((income) => income.id === editIncId ? { ...income, ...incForm, amount } : income)
       : [{ id: Date.now(), ...incForm, amount }, ...incomes];
 
+    if (!save(expenses, nextIncomes, budget)) return;
+
     setIncomes(nextIncomes);
-    save(expenses, nextIncomes, budget);
     setEditIncId(null);
     setIncForm(emptyIncomeForm());
     showToast(editIncId ? "Income updated!" : "Income added!");
@@ -110,15 +121,18 @@ export default function App() {
 
   const deleteExpense = (id) => {
     const nextExpenses = expenses.filter((expense) => expense.id !== id);
+
+    if (!save(nextExpenses, incomes, budget)) return;
+
     setExpenses(nextExpenses);
-    save(nextExpenses, incomes, budget);
     showToast("Deleted", "error");
   };
-
   const deleteIncome = (id) => {
     const nextIncomes = incomes.filter((income) => income.id !== id);
+
+    if (!save(expenses, nextIncomes, budget)) return;
+
     setIncomes(nextIncomes);
-    save(expenses, nextIncomes, budget);
     showToast("Deleted", "error");
   };
 
@@ -144,13 +158,16 @@ export default function App() {
     setTab("income");
     setIncomeView("add");
   };
-
   const saveBudget = () => {
     const nextBudget = parseFloat(budgetInput);
-    if (!nextBudget || nextBudget <= 0) return;
+    if (!nextBudget || nextBudget <= 0) {
+      showToast("Enter a valid budget", "error");
+      return;
+    }
+
+    if (!save(expenses, incomes, nextBudget)) return;
 
     setBudget(nextBudget);
-    save(expenses, incomes, nextBudget);
     setEditBudget(false);
     showToast("Budget updated!");
   };
