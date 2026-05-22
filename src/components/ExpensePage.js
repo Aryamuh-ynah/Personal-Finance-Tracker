@@ -3,9 +3,7 @@ import { CATEGORIES } from "../constants/finance";
 export default function ExpensePage({ editExpId, expForm, setExpForm, addExpense, cancelEditExpense, styles }) {
   return (
     <div>
-      <div style={{ display: "flex", gap: 8, padding: "12px 16px 0" }}>
-        <button style={styles.tabBtn(true)} onClick={cancelEditExpense}>➕ Add</button>
-      </div>
+
       <div style={styles.card}>
         <div style={{ fontWeight: 700, fontSize: 17, marginBottom: 14 }}>{editExpId ? "✏️ Edit Expense" : "➕ Add Expense"}</div>
         <div style={{ marginBottom: 12 }}>

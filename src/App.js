@@ -199,6 +199,7 @@ export default function App() {
   };
   const saveBudget = () => {
     const nextBudget = parseFloat(budgetInput);
+
     if (!nextBudget || nextBudget <= 0) {
       showToast("Enter a valid budget", "error");
       return;
@@ -306,7 +307,17 @@ export default function App() {
         />
       )}
       {tab === "settings" && (
-        <SettingsPage themeId={themeId} setThemeId={setThemeId} />
+        <SettingsPage
+          themeId={themeId}
+          setThemeId={setThemeId}
+          budgetInput={budgetInput}
+          setBudgetInput={setBudgetInput}
+          saveBudget={saveBudget}
+          editBudget={editBudget}
+          setEditBudget={setEditBudget}
+          budget={budget}
+          styles={styles}
+        />
       )}
 
 
