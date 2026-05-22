@@ -1,6 +1,6 @@
 # 💸 Personal Finance Tracker (BDT)
 
-A clean, mobile-friendly personal finance tracker built with React. Track your income, expenses, monthly budget, and carried-forward balance — all in one place, with your data saved in your browser across sessions.
+A clean, mobile-friendly personal finance tracker built with React. Track your income, expenses, monthly budget, transaction history and carried-forward balance — all in one place, with your data saved in your browser across sessions.
 
 > 🎙️ **Vibe Coded** — This app started through a conversational AI session using [Claude](https://claude.ai) by Anthropic and was refined into a React project.
 
@@ -8,24 +8,60 @@ A clean, mobile-friendly personal finance tracker built with React. Track your i
 
 ## ✨ Features
 
-- 💰 **Income Tracking** — Log earnings by source (Salary, Freelance, Business, Gift, Investment, Loan Received, etc.)
-- 💸 **Expense Tracking** — Categorize spending (Food, Transport, Bills, Shopping, Health, Education, Groceries, Lending, Donations, and more)
-- 📊 **Dashboard** — Net balance, budget progress bar, pie chart by category, 6-month income vs. spending bar chart
-- 🔄 **Carried Forward** — See last month's leftover balance at the top of your income breakdown
-- 🔔 **Budget Alerts** — Warning at 80% usage, red alert when over budget
-- 📋 **History** — Filter expenses by month and category
-- ✏️ **Edit & Delete** — Full CRUD on both income and expense entries
-- 💾 **Persistent Storage** — Data is saved across sessions with browser `localStorage`
-- 🇧🇩 **BDT (৳ Taka)** default currency
+- 📊 **Dashboard Overview**
+  - Monthly income
+  - Monthly expenses
+  - Net balance
+  - Budget usage progress
+  - Category-wise spending chart
+  - 6-month income vs expense overview
+
+- 💰 **Income Tracking**
+  - Add income by source
+  - Edit income records
+  - Delete income with confirmation popup
+  - Supports Salary, Freelance, Business, Gift, Investment, Loan Received, and Other
+
+- 💸 **Expense Tracking**
+  - Add expenses by category
+  - Edit expense records
+  - Delete expense with custom confirmation modal
+  - Supports Food, Transport, Bills, Shopping, Health, Education, Groceries, Donations, Lending, and more
+
+- 📋 **History Page**
+  - View all income and expense records
+  - Filter by month
+  - Filter expenses by category
+  - Filter income by source
+
+- ⚙️ **Settings Page**
+  - Edit monthly budget
+  - Choose from 5 modern themes
+  - Theme selection is saved after reload
+
+- 🎨 **Theme Support**
+  - Midnight Indigo
+  - Emerald Mint
+  - Ocean Cyan
+  - Sunset Amber
+  - Graphite Lime
+
+- 💾 **Persistent Storage**
+  - Uses browser `localStorage`
+  - Data remains saved after page refresh
+  - Active tab and selected theme stay saved
+
+- 🇧🇩 **BDT Currency**
+  - Default currency format uses Bangladeshi Taka `৳`
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Tool          | Purpose                              |
-| ------------- | ------------------------------------ |
-| React (Hooks) | UI & state management                |
-| Recharts      | Pie chart & bar chart                |
+| Tool          | Purpose                               |
+| ------------- | ------------------------------------- |
+| React (Hooks) | UI & state management                 |
+| Recharts      | Pie chart & bar chart                 |
 | localStorage  | Browser-based persistent data storage |
 
 ---
@@ -65,9 +101,13 @@ finance-tracker/
 │   ├── constants/        # Categories, income sources, storage key
 │   ├── styles/           # Shared inline style object
 │   ├── utils/            # Formatting, dates, localStorage helpers
+│   ├── App.css
+│   ├── index.css
 │   ├── App.js            # App state and page wiring
 │   └── index.js
-└── package.json
+├── package.json
+├── tailwind.config.js
+└── README.md
 ```
 
 ---
@@ -102,4 +142,4 @@ MIT License — free to use, modify, and distribute.
 
 ---
 
-> Built with ❤️ and good vibes using [Claude AI](https://claude.ai) and React.
+> Built with ❤️ and good vibes using [Claude AI](https://claude.ai), [ChatGPT](https://chatgpt.com) and React.
