@@ -106,7 +106,7 @@ export default function Dashboard({ data, budgetState, popupState, styles }) {
       <ExpensesPopup isOpen={showExpPopup} onClose={() => setShowExpPopup(false)} expenses={thisMonthExp} styles={styles} />
       <IncomePopup isOpen={showIncPopup} onClose={() => setShowIncPopup(false)} incomes={incomes} expenses={expenses} currentMonthIncomes={thisMonthInc} totalIncome={totalIncome} styles={styles} />
 
-      <BudgetCard budget={budget} totalSpent={totalSpent} styles={styles} />
+      <BudgetCard budget={budget} spent={totalSpent} styles={styles} />
 
       {catTotals.length > 0 && (
         <div style={styles.card}>

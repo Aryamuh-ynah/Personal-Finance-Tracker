@@ -103,7 +103,7 @@ export default function App() {
   const safeBudget = Number(budget) || 0;
   const remaining = safeBudget - totalSpent;
   const pct = safeBudget > 0 ? Math.min((totalSpent / safeBudget) * 100, 100) : 0;
-  const overBudget = totalSpent > budget;
+  const overBudget = totalSpent > safeBudget;
   const nearBudget = !overBudget && pct >= 80;
 
   const addExpense = () => {
@@ -226,7 +226,9 @@ export default function App() {
 
   const catTotals = CATEGORIES.map((category) => ({
     name: category.name,
-    value: thisMonthExp.filter((expense) => expense.category === category.name).reduce((sum, expense) => sum + expense.amount, 0),
+    value: thisMonthExp
+      .filter((expense) => expense.category === category.name)
+      .reduce((sum, expense) => sum + Number(expense.amount || 0), 0),
     color: category.color,
   })).filter((category) => category.value > 0);
 
