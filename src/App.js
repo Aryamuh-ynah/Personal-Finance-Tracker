@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import "./App.css";
 import BottomNav from "./components/BottomNav";
 import Dashboard from "./components/Dashboard";
@@ -6,9 +6,10 @@ import ExpensePage from "./components/ExpensePage";
 import Header from "./components/Header";
 import HistoryPage from "./components/HistoryPage";
 import IncomePage from "./components/IncomePage";
+import SettingsPage from "./components/SettingsPage";
 import Toast from "./components/Toast";
 import { CATEGORIES, DEFAULT_BUDGET, MONTHS } from "./constants/finance";
-import { styles } from "./styles/appStyles";
+import { createStyles, DEFAULT_THEME_ID } from "./styles/appStyles";
 import { fmt, monthKey, today } from "./utils/finance";
 import { loadFinanceData, saveFinanceData } from "./utils/storage";
 const emptyExpenseForm = () => ({ amount: "", category: "Food", date: today(), note: "" });
@@ -36,7 +37,11 @@ export default function App() {
   const [editIncId, setEditIncId] = useState(null);
   const [incomeView, setIncomeView] = useState("add");
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [themeId, setThemeId] = useState(() => {
+    return localStorage.getItem("themeId") || DEFAULT_THEME_ID;
+  });
 
+  const styles = useMemo(() => createStyles(themeId), [themeId]);
   const showToast = (msg, type = "success") => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 2500);
@@ -61,6 +66,11 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("activeTab", tab);
   }, [tab]);
+
+  useEffect(() => {
+    localStorage.setItem("themeId", themeId);
+  }, [themeId]);
+
 
   const save = useCallback((nextExpenses, nextIncomes, nextBudget) => {
     setSaving(true);
@@ -243,7 +253,7 @@ export default function App() {
     : nearBudget ? <div style={{ background: "#78350f", color: "#fcd34d", padding: "8px 16px", fontSize: 13, fontWeight: 600 }}>⚠️ Used {Math.round(pct)}% of budget — be careful!</div> : null;
 
   return (
-    <div style={styles.app}>
+    <div data-theme={themeId} style={styles.app}>
       <Toast toast={toast} />
       <Header saving={saving} styles={styles} />
       {alertBar}
@@ -303,29 +313,27 @@ export default function App() {
           styles={styles}
         />
       )}
+      {tab === "settings" && (
+        <SettingsPage themeId={themeId} setThemeId={setThemeId} />
+      )}
+
 
       <BottomNav tab={tab} setTab={setTab} styles={styles} />
 
       {deleteConfirm && (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/75 p-5">
-          <div className="w-full max-w-[380px] rounded-2xl border border-slate-700 bg-slate-800 p-6 text-center shadow-2xl">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-500/15 text-3xl">
-              🗑️
-            </div>
+        <div className="delete-modal-overlay">
+          <div className="delete-modal">
+            <div className="delete-modal-icon">🗑️</div>
 
-            <h3 className="mb-2 text-xl font-bold text-slate-50">
-              {deleteConfirm.title}
-            </h3>
+            <h3 className="delete-modal-title">{deleteConfirm.title}</h3>
 
-            <p className="mb-6 text-sm leading-6 text-slate-300">
-              {deleteConfirm.message}
-            </p>
+            <p className="delete-modal-message">{deleteConfirm.message}</p>
 
-            <div className="flex gap-3">
+            <div className="delete-modal-actions">
               <button
                 type="button"
                 onClick={() => setDeleteConfirm(null)}
-                className="flex-1 rounded-xl border border-slate-600 bg-slate-950 px-4 py-3 text-sm font-bold text-slate-200 hover:bg-slate-700"
+                className="delete-modal-cancel-btn"
               >
                 Cancel
               </button>
@@ -333,7 +341,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={confirmDelete}
-                className="flex-1 rounded-xl bg-red-500 px-4 py-3 text-sm font-bold text-white hover:bg-red-600"
+                className="delete-modal-delete-btn"
               >
                 Delete
               </button>
@@ -341,6 +349,7 @@ export default function App() {
           </div>
         </div>
       )}
+
 
     </div>
   );

@@ -1,38 +1,184 @@
-.App {
-  text-align: center;
+:root,
+[data-theme="midnight"] {
+  --app-bg: #0f172a;
+  --card-bg: #1e293b;
+  --input-bg: #0f172a;
+  --border-color: #334155;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --primary: #6366f1;
+  --primary-soft: rgba(99, 102, 241, 0.16);
+  --danger: #ef4444;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+[data-theme="emerald"] {
+  --app-bg: #052e2b;
+  --card-bg: #064e3b;
+  --input-bg: #022c22;
+  --border-color: #047857;
+  --text-main: #ecfdf5;
+  --text-muted: #a7f3d0;
+  --primary: #10b981;
+  --primary-soft: rgba(16, 185, 129, 0.18);
+  --danger: #f43f5e;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+[data-theme="ocean"] {
+  --app-bg: #082f49;
+  --card-bg: #0f3a5f;
+  --input-bg: #0c243d;
+  --border-color: #075985;
+  --text-main: #f0f9ff;
+  --text-muted: #bae6fd;
+  --primary: #06b6d4;
+  --primary-soft: rgba(6, 182, 212, 0.18);
+  --danger: #fb7185;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+[data-theme="sunset"] {
+  --app-bg: #1c1917;
+  --card-bg: #292524;
+  --input-bg: #0c0a09;
+  --border-color: #57534e;
+  --text-main: #fff7ed;
+  --text-muted: #fed7aa;
+  --primary: #f59e0b;
+  --primary-soft: rgba(245, 158, 11, 0.18);
+  --danger: #ef4444;
 }
 
-.App-link {
-  color: #61dafb;
+[data-theme="plum"] {
+  --app-bg: #2e1065;
+  --card-bg: #3b0764;
+  --input-bg: #1e1b4b;
+  --border-color: #7e22ce;
+  --text-main: #faf5ff;
+  --text-muted: #e9d5ff;
+  --primary: #ec4899;
+  --primary-soft: rgba(236, 72, 153, 0.18);
+  --danger: #f43f5e;
 }
 
-@keyframes App-logo-spin {
+.delete-modal-overlay {
+  @apply fixed inset-0 z-[99999] flex items-center justify-center p-5;
+  background: rgba(2, 6, 23, 0.75);
+}
+
+.delete-modal {
+  @apply w-full max-w-[380px] rounded-2xl border p-6 text-center shadow-2xl;
+  background: var(--card-bg);
+  border-color: var(--border-color);
+  animation: deleteModalPop 0.18s ease-out;
+}
+
+.delete-modal-icon {
+  @apply mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full text-3xl;
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.delete-modal-title {
+  @apply mb-2 text-xl font-bold;
+  color: var(--text-main);
+}
+
+.delete-modal-message {
+  @apply mb-6 text-sm leading-6;
+  color: var(--text-muted);
+}
+
+.delete-modal-actions {
+  @apply flex gap-3;
+}
+
+.delete-modal-cancel-btn {
+  @apply flex-1 rounded-xl border px-4 py-3 text-sm font-bold;
+  background: var(--input-bg);
+  border-color: var(--border-color);
+  color: var(--text-main);
+}
+
+.delete-modal-delete-btn {
+  @apply flex-1 rounded-xl px-4 py-3 text-sm font-bold text-white;
+  background: var(--danger);
+}
+
+.delete-modal-cancel-btn:hover {
+  filter: brightness(1.12);
+}
+
+.delete-modal-delete-btn:hover {
+  filter: brightness(0.92);
+}
+
+.settings-page {
+  @apply px-4 py-4;
+}
+
+.settings-title {
+  @apply mb-1 text-2xl font-bold;
+  color: var(--text-main);
+}
+
+.settings-subtitle {
+  @apply mb-5 text-sm;
+  color: var(--text-muted);
+}
+
+.theme-grid {
+  @apply grid gap-3;
+}
+
+.theme-card {
+  @apply w-full rounded-2xl border p-4 text-left transition;
+  background: var(--card-bg);
+  border-color: var(--border-color);
+  color: var(--text-main);
+}
+
+.theme-card:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.theme-card-active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.theme-card-top {
+  @apply mb-3 flex items-center justify-between gap-3;
+}
+
+.theme-name {
+  @apply text-base font-bold;
+}
+
+.theme-description {
+  @apply mt-1 text-xs;
+  color: var(--text-muted);
+}
+
+.theme-colors {
+  @apply flex items-center gap-1;
+}
+
+.theme-color-dot {
+  @apply h-6 w-6 rounded-full border border-white/20;
+}
+
+.theme-selected-badge {
+  @apply rounded-full px-3 py-1 text-xs font-bold text-white;
+  background: var(--primary);
+}
+
+@keyframes deleteModalPop {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: scale(0.94) translateY(8px);
   }
+
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
