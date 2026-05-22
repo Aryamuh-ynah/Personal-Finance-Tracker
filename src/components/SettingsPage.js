@@ -31,20 +31,12 @@ export default function SettingsPage({
   return (
     <main className="settings-page">
       <h2 className="settings-title">Settings</h2>
+
       <p className="settings-subtitle">
         Manage your app appearance, theme, and monthly budget.
       </p>
 
-      <h3
-        style={{
-          margin: "0 0 10px",
-          fontSize: 18,
-          fontWeight: 800,
-          color: "var(--text-main)",
-        }}
-      >
-        🌓 Appearance
-      </h3>
+      <h3 className="settings-section-title">🌓 Appearance</h3>
 
       <div className="appearance-grid">
         {APPEARANCE_OPTIONS.map((option) => {
@@ -69,84 +61,10 @@ export default function SettingsPage({
         })}
       </div>
 
-      <section style={styles.card}>
-        <div style={{ fontWeight: 700, fontSize: 17, marginBottom: 14 }}>
-          💸 Monthly Budget
-        </div>
 
-        {!editBudget ? (
-          <>
-            <div style={styles.label}>Current Budget</div>
+      <h3 className="settings-section-title">🎨 Color Theme</h3>
 
-            <div
-              style={{
-                fontSize: 24,
-                fontWeight: 800,
-                marginBottom: 14,
-                color: "var(--text-main)",
-              }}
-            >
-              ৳{Number(budget).toLocaleString()}
-            </div>
-
-            <button
-              type="button"
-              style={styles.btn("var(--primary)")}
-              onClick={() => {
-                setBudgetInput(String(budget));
-                setEditBudget(true);
-              }}
-            >
-              ✏️ Edit Budget
-            </button>
-          </>
-        ) : (
-          <>
-            <div style={{ marginBottom: 12 }}>
-              <div style={styles.label}>Budget Amount (৳)</div>
-              <input
-                style={styles.input}
-                type="number"
-                value={budgetInput}
-                onChange={(e) => setBudgetInput(e.target.value)}
-                placeholder="Enter monthly budget"
-              />
-            </div>
-
-            <button
-              type="button"
-              style={styles.btn("#22c55e")}
-              onClick={saveBudget}
-            >
-              Save Budget
-            </button>
-
-            <button
-              type="button"
-              style={{ ...styles.btn("#334155"), marginTop: 10 }}
-              onClick={() => {
-                setBudgetInput(String(budget));
-                setEditBudget(false);
-              }}
-            >
-              Cancel
-            </button>
-          </>
-        )}
-      </section>
-
-      <h3
-        style={{
-          margin: "22px 0 8px",
-          fontSize: 18,
-          fontWeight: 800,
-          color: "var(--text-main)",
-        }}
-      >
-        🎨 Color Theme
-      </h3>
-
-      <div className="theme-grid">
+      <div className="theme-grid mb-5">
         {THEMES.map((theme) => {
           const active = theme.id === themeId;
 
@@ -179,6 +97,68 @@ export default function SettingsPage({
           );
         })}
       </div>
+
+
+    <h3 className="settings-section-title">💸 Monthly Budget</h3>
+
+      <section className="settings-section">
+        {!editBudget ? (
+          <>
+            <div style={styles.label}>Current Budget</div>
+
+            <div className="budget-settings-value">
+              ৳{Number(budget || 0).toLocaleString()}
+            </div>
+
+            <button
+              type="button"
+              style={styles.btn("var(--primary)")}
+              onClick={() => {
+                setBudgetInput(String(budget || 0));
+                setEditBudget(true);
+              }}
+            >
+              ✏️ Edit Budget
+            </button>
+          </>
+        ) : (
+          <>
+            <div style={{ marginBottom: 12 }}>
+              <div style={styles.label}>Budget Amount (৳)</div>
+
+              <input
+                style={styles.input}
+                type="number"
+                value={budgetInput}
+                onChange={(e) => setBudgetInput(e.target.value)}
+                placeholder="Enter monthly budget"
+              />
+            </div>
+
+            <div className="budget-settings-actions">
+              <button
+                type="button"
+                style={styles.btn("#22c55e")}
+                onClick={saveBudget}
+              >
+                Save Budget
+              </button>
+
+              <button
+                type="button"
+                style={styles.btn("#334155")}
+                onClick={() => {
+                  setBudgetInput(String(budget || 0));
+                  setEditBudget(false);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </>
+        )}
+      </section>
+
     </main>
   );
 }
