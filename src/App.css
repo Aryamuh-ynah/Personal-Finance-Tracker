@@ -47,16 +47,16 @@
   --danger: #ef4444;
 }
 
-[data-theme="plum"] {
-  --app-bg: #2e1065;
-  --card-bg: #3b0764;
-  --input-bg: #1e1b4b;
-  --border-color: #7e22ce;
-  --text-main: #faf5ff;
-  --text-muted: #e9d5ff;
-  --primary: #ec4899;
-  --primary-soft: rgba(236, 72, 153, 0.18);
-  --danger: #f43f5e;
+[data-theme="graphite"] {
+  --app-bg: #111827;
+  --card-bg: #1f2937;
+  --input-bg: #030712;
+  --border-color: #374151;
+  --text-main: #f9fafb;
+  --text-muted: #9ca3af;
+  --primary: #84cc16;
+  --primary-soft: rgba(132, 204, 22, 0.18);
+  --danger: #ef4444;
 }
 
 .delete-modal-overlay {

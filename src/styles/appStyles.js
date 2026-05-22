@@ -26,10 +26,10 @@ export const THEMES = [
     colors: ["#1c1917", "#292524", "#f59e0b"],
   },
   {
-    id: "plum",
-    name: "Plum Rose",
-    description: "Premium purple and rose combination",
-    colors: ["#2e1065", "#3b0764", "#ec4899"],
+    id: "graphite",
+    name: "Graphite Lime",
+    description: "Dark graphite with fresh lime accent",
+    colors: ["#111827", "#1f2937", "#84cc16"],
   },
 ];
 
