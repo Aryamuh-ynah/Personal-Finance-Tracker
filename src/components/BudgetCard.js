@@ -1,7 +1,13 @@
 import { fmt } from "../utils/finance";
 
-export default function BudgetCard({ budget, monthExpense, styles }) {
-  const percent = Math.min((monthExpense / budget) * 100, 100);
+export default function BudgetCard({ budget, spent = 0, styles }) {
+  const safeBudget = Number(budget) || 0;
+  const safeSpent = Number(spent) || 0;
+
+  const percent =
+    safeBudget > 0 ? Math.min((safeSpent / safeBudget) * 100, 100) : 0;
+
+  const left = Math.max(safeBudget - safeSpent, 0);
 
   return (
     <div style={styles.card}>
@@ -9,30 +15,31 @@ export default function BudgetCard({ budget, monthExpense, styles }) {
         style={{
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 10,
+          alignItems: "flex-start",
+          marginBottom: 12,
         }}
       >
         <div>
           <div style={styles.label}>Monthly Budget</div>
-          <div style={{ fontSize: 22, fontWeight: 800 }}>{fmt(budget)}</div>
+          <div style={{ fontSize: 22, fontWeight: 800 }}>
+            {fmt(safeBudget)}
+          </div>
         </div>
 
         <div style={{ textAlign: "right" }}>
           <div style={styles.label}>Spent</div>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "#ef4444" }}>
-            {fmt(monthExpense)}
+          <div style={{ fontSize: 18, fontWeight: 800, color: "#ef4444" }}>
+            {fmt(safeSpent)}
           </div>
         </div>
       </div>
 
       <div
         style={{
-          height: 10,
+          height: 9,
           background: "var(--input-bg)",
           borderRadius: 999,
           overflow: "hidden",
-          border: "1px solid var(--border-color)",
         }}
       >
         <div
@@ -55,9 +62,12 @@ export default function BudgetCard({ budget, monthExpense, styles }) {
           marginTop: 8,
           fontSize: 12,
           color: "var(--text-muted)",
+          display: "flex",
+          justifyContent: "space-between",
         }}
       >
-        {percent.toFixed(0)}% of budget used
+        <span>{percent.toFixed(0)}% of budget used</span>
+        <span>Left {fmt(left)}</span>
       </div>
     </div>
   );

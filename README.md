@@ -114,7 +114,7 @@ finance-tracker/
 
 ## 📸 Screens
 
-| Dashboard                   | Add Income                 | Expense History            |
+| Dashboard                   | Add Income                 | History                    |
 | --------------------------- | -------------------------- | -------------------------- |
 | Net balance, charts, budget | Source, amount, date, note | Filter by month & category |
 
