@@ -15,7 +15,9 @@ const emptyExpenseForm = () => ({ amount: "", category: "Food", date: today(), n
 const emptyIncomeForm = () => ({ amount: "", source: "Salary", date: today(), note: "" });
 
 export default function App() {
-  const [tab, setTab] = useState("dashboard");
+  const [tab, setTab] = useState(() => {
+  return localStorage.getItem("activeTab") || "dashboard";
+});
   const [expenses, setExpenses] = useState([]);
   const [incomes, setIncomes] = useState([]);
   const [budget, setBudget] = useState(DEFAULT_BUDGET);
@@ -50,6 +52,10 @@ export default function App() {
 
     setLoading(false);
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("activeTab", tab);
+  }, [tab]);
 
   const save = useCallback((nextExpenses, nextIncomes, nextBudget) => {
     setSaving(true);
@@ -168,8 +174,19 @@ export default function App() {
   });
 
   const allMonths = [...new Set([...expenses.map((expense) => monthKey(expense.date)), ...incomes.map((income) => monthKey(income.date))])].sort().reverse();
-  const filteredExp = expenses.filter((expense) => (filterCat === "All" || expense.category === filterCat) && monthKey(expense.date) === filterMonth);
-  const filteredInc = incomes.filter((income) => monthKey(income.date) === filterMonth);
+  const filteredExp = expenses.filter(
+    (expense) =>
+      monthKey(expense.date) === filterMonth &&
+      (filterCat === "All" || expense.category === filterCat)
+  );
+
+  const filteredInc = incomes.filter(
+    (income) =>
+      monthKey(income.date) === filterMonth &&
+      (filterCat === "All" || income.source === filterCat)
+  );
+
+
 
   if (loading) {
     return <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", background: "#0f172a", color: "#94a3b8" }}>Loading...</div>;
