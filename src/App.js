@@ -35,7 +35,7 @@ export default function App() {
   const [showExpPopup, setShowExpPopup] = useState(false);
   const [showIncPopup, setShowIncPopup] = useState(false);
   const [editIncId, setEditIncId] = useState(null);
-  const [incomeView, setIncomeView] = useState("add");
+  const [ setIncomeView] = useState("add");
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [themeId, setThemeId] = useState(() => {
     return localStorage.getItem("themeId") || DEFAULT_THEME_ID;
@@ -269,19 +269,11 @@ export default function App() {
 
       {tab === "income" && (
         <IncomePage
-          incomeView={incomeView}
-          setIncomeView={setIncomeView}
           editIncId={editIncId}
           incForm={incForm}
           setIncForm={setIncForm}
           addIncome={addIncome}
           cancelEditIncome={cancelEditIncome}
-          filteredInc={filteredInc}
-          filterMonth={filterMonth}
-          setFilterMonth={setFilterMonth}
-          allMonths={allMonths}
-          startEditInc={startEditInc}
-          deleteIncome={deleteIncome}
           styles={styles}
         />
       )}
