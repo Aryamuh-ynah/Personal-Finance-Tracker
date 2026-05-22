@@ -120,20 +120,32 @@ export default function App() {
   };
 
   const deleteExpense = (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this expense?"
+    );
+
+    if (!confirmDelete) return;
+
     const nextExpenses = expenses.filter((expense) => expense.id !== id);
 
     if (!save(nextExpenses, incomes, budget)) return;
 
     setExpenses(nextExpenses);
-    showToast("Deleted", "error");
+    showToast("Expense deleted", "error");
   };
   const deleteIncome = (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this income?"
+    );
+
+    if (!confirmDelete) return;
+
     const nextIncomes = incomes.filter((income) => income.id !== id);
 
     if (!save(expenses, nextIncomes, budget)) return;
 
     setIncomes(nextIncomes);
-    showToast("Deleted", "error");
+    showToast("Income deleted", "error");
   };
 
   const cancelEditExpense = () => {
