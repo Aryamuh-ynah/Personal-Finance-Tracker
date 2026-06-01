@@ -169,38 +169,45 @@
   border-color: var(--border-color);
 }
 
-.appearance-grid {
-  @apply mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2;
-}
-
-.appearance-card {
-  @apply w-full rounded-2xl border p-4 text-left transition;
+.appearance-toggle-card {
+  @apply mb-6 flex items-center justify-between gap-4 rounded-2xl border p-4;
   background: var(--card-bg);
   border-color: var(--border-color);
   color: var(--text-main);
 }
 
-.appearance-card:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.05);
+.appearance-toggle-title {
+  @apply text-base font-bold;
+  color: var(--text-main);
 }
 
-.appearance-card-active {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-soft);
-}
-
-.appearance-icon {
-  @apply mb-3 text-3xl;
-}
-
-.appearance-title {
-  @apply text-sm font-bold;
-}
-
-.appearance-description {
-  @apply mt-1 text-xs;
+.appearance-toggle-description {
+  @apply mt-1 text-sm;
   color: var(--text-muted);
+}
+
+.appearance-toggle {
+  @apply relative flex h-9 w-[72px] shrink-0 items-center rounded-full border p-1 transition;
+  border-color: var(--border-color);
+  background: var(--input-bg);
+}
+
+.appearance-toggle-icon {
+  @apply flex h-7 w-7 items-center justify-center rounded-full text-base shadow-md transition;
+  background: var(--primary);
+  transform: translateX(0);
+}
+
+.appearance-toggle-light .appearance-toggle-icon {
+  transform: translateX(35px);
+}
+
+.appearance-toggle-dark .appearance-toggle-icon {
+  transform: translateX(0);
+}
+
+.appearance-toggle:hover {
+  filter: brightness(1.08);
 }
 
 .theme-grid {

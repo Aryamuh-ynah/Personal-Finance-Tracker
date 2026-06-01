@@ -1,19 +1,5 @@
 import { THEMES } from "../styles/appStyles";
 
-const APPEARANCE_OPTIONS = [
-  {
-    id: "dark",
-    icon: "🌙",
-    title: "Dark Mode",
-    description: "Modern dark interface",
-  },
-  {
-    id: "light",
-    icon: "☀️",
-    title: "Light Mode",
-    description: "Clean bright interface",
-  },
-];
 
 export default function SettingsPage({
   themeId,
@@ -38,27 +24,33 @@ export default function SettingsPage({
 
       <h3 className="settings-section-title">🌓 Appearance</h3>
 
-      <div className="appearance-grid">
-        {APPEARANCE_OPTIONS.map((option) => {
-          const active = appearance === option.id;
+      <div className="appearance-toggle-card">
+        <div>
+          <div className="appearance-toggle-title">
+            {appearance === "dark" ? "Dark Mode" : "Light Mode"}
+          </div>
 
-          return (
-            <button
-              key={option.id}
-              type="button"
-              onClick={() => setAppearance(option.id)}
-              className={`appearance-card ${
-                active ? "appearance-card-active" : ""
-              }`}
-            >
-              <div className="appearance-icon">{option.icon}</div>
-              <div className="appearance-title">{option.title}</div>
-              <div className="appearance-description">
-                {option.description}
-              </div>
-            </button>
-          );
-        })}
+          <div className="appearance-toggle-description">
+            {appearance === "dark"
+              ? "Modern dark interface"
+              : "Clean bright interface"}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className={`appearance-toggle ${
+            appearance === "dark" ? "appearance-toggle-dark" : "appearance-toggle-light"
+          }`}
+          onClick={() =>
+            setAppearance(appearance === "dark" ? "light" : "dark")
+          }
+          aria-label="Toggle dark and light mode"
+        >
+          <span className="appearance-toggle-icon">
+            {appearance === "dark" ? "🌙" : "☀️"}
+          </span>
+        </button>
       </div>
 
 
