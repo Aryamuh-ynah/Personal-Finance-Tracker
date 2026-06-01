@@ -16,7 +16,7 @@ export default function HistoryPage({
   deleteIncome,
   styles
 }) {
-  const [typeFilter, setTypeFilter] = useState("Expenses");
+  const [typeFilter, setTypeFilter] = useState("All");
 
   const getExpenseMeta = (category) =>
     CATEGORIES.find(c => c.name === category) || { icon: "📦", color: "#6b7280" };
@@ -44,6 +44,7 @@ export default function HistoryPage({
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value)}
         >
+          <option value="All">All</option>
           <option value="Expenses">Expenses</option>
           <option value="Income">Income</option>
         </select>
@@ -130,6 +131,89 @@ export default function HistoryPage({
               </div>
             );
           })}
+        </>
+      )}
+
+      {typeFilter === "All" && (
+        <>
+          <div style={{ padding: "8px 0", color: "var(--text-muted)", fontSize: 13 }}>
+            {filteredExp.length} expense transactions ·{" "}
+            {fmt(filteredExp.reduce((sum, e) => sum + Number(e.amount || 0), 0))} spent
+            {" | "}
+            {filteredInc.length} income transactions ·{" "}
+            {fmt(filteredInc.reduce((sum, i) => sum + Number(i.amount || 0), 0))} received
+          </div>
+
+          {filteredExp.length === 0 && filteredInc.length === 0 && (
+            <div style={{ textAlign: "center", color: "var(--text-muted)", padding: 40 }}>
+              No records found.
+            </div>
+          )}
+
+          {[...filteredInc.map((income) => ({ ...income, recordType: "income" })),
+            ...filteredExp.map((expense) => ({ ...expense, recordType: "expense" }))]
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .map((record) => {
+              const isIncome = record.recordType === "income";
+              const meta = isIncome
+                ? getIncomeMeta(record.source)
+                : getExpenseMeta(record.category);
+
+              return (
+                <div key={`${record.recordType}-${record.id}`} style={styles.item}>
+                  <div style={{ fontSize: 26 }}>{meta.icon}</div>
+
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                      <span style={styles.badge(meta.color)}>
+                        {isIncome ? record.source : record.category}
+                      </span>
+
+                      <span
+                        style={{
+                          fontWeight: 700,
+                          color: isIncome ? "#22c55e" : "#ef4444",
+                        }}
+                      >
+                        {isIncome ? "+" : "-"}
+                        {fmt(Number(record.amount || 0))}
+                      </span>
+                    </div>
+
+                    <div
+                      style={{
+                        fontSize: 12,
+                        color: "var(--text-muted)",
+                        marginTop: 4,
+                      }}
+                    >
+                      {record.date}
+                      {record.note ? ` · ${record.note}` : ""}
+                    </div>
+                  </div>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                    <button
+                      onClick={() =>
+                        isIncome ? startEditInc(record) : startEditExp(record)
+                      }
+                      style={buttonStyle("#334155", "#94a3b8")}
+                    >
+                      ✏️
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        isIncome ? deleteIncome(record.id) : deleteExpense(record.id)
+                      }
+                      style={buttonStyle("#7f1d1d", "#fca5a5")}
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
         </>
       )}
     </div>
