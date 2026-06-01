@@ -140,7 +140,7 @@ export default function Dashboard({ data, budgetState, popupState, styles }) {
             </div>
           ) : (
             <>
-              <div style={{ width: "100%", height: 230 }}>
+              <div style={{ width: "100%", height: 220 }}>
                 <ResponsiveContainer>
                   <PieChart>
                     <Pie
@@ -150,8 +150,7 @@ export default function Dashboard({ data, budgetState, popupState, styles }) {
                       cx="50%"
                       cy="50%"
                       outerRadius={78}
-                      innerRadius={35}
-                      paddingAngle={2}
+                      paddingAngle={1}
                       label={false}
                       labelLine={false}
                     >
@@ -173,46 +172,53 @@ export default function Dashboard({ data, budgetState, popupState, styles }) {
                 </ResponsiveContainer>
               </div>
 
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))",
-                  gap: 10,
-                  marginTop: 10,
-                }}
-              >
-                {catTotals.map((item) => {
-                  const percent =
-                    totalSpent > 0 ? Math.round((item.value / totalSpent) * 100) : 0;
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "8px 14px",
+                marginTop: 8,
+                padding: "0px 10px",
+              }}
+            >
+              {catTotals.map((item) => {
+                const percent =
+                  totalSpent > 0 ? Math.round((item.value / totalSpent) * 100) : 0;
 
-                  return (
-                    <div
-                      key={item.name}
+                return (
+                  <div
+                    key={item.name}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 5,
+                      fontSize: 13,
+                      whiteSpace: "nowrap",
+                      color: "var(--text-main)",
+                    }}
+                  >
+                    <span
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                        fontSize: 13,
-                        color: "var(--text-main)",
+                        width: 9,
+                        height: 9,
+                        borderRadius: "50%",
+                        background: item.color,
+                        flexShrink: 0,
+                        
                       }}
-                    >
-                      <span
-                        style={{
-                          width: 10,
-                          height: 10,
-                          borderRadius: "50%",
-                          background: item.color,
-                          flexShrink: 0,
-                        }}
-                      />
+                    />
+                    <span>{item.name}</span>
+                    <span style={{ color: item.color, fontWeight: 700 }}>
+                      {percent}%
+                    </span>
 
-                      <span style={{ flex: 1 }}>{item.name}</span>
-
-                      <strong style={{ color: item.color }}>{percent}%</strong>
-                    </div>
-                  );
-                })}
-              </div>
+                    
+                  </div>
+                );
+              })}
+            </div>
             </>
           )}
         </div>
