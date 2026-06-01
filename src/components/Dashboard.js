@@ -109,16 +109,112 @@ export default function Dashboard({ data, budgetState, popupState, styles }) {
       <BudgetCard budget={budget} spent={totalSpent} styles={styles} />
 
       {catTotals.length > 0 && (
+        // <div style={styles.card}>
+        //   <div style={{ fontWeight: 600, marginBottom: 10 }}>Spending by Category</div>
+        //   <ResponsiveContainer width="100%" height={190}>
+        //     <PieChart>
+        //       <Pie data={catTotals} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} label={({ name, percent }) => `${name} ${Math.round(percent * 100)}%`} labelLine={false}>
+        //         {catTotals.map((category, index) => <Cell key={index} fill={category.color} />)}
+        //       </Pie>
+        //       <Tooltip formatter={(value) => fmt(value)} contentStyle={{ background: "#1e293b", border: "none", borderRadius: 8, color: "#f1f5f9" }} />
+        //     </PieChart>
+
+            
+        //   </ResponsiveContainer>
+        // </div>
+
         <div style={styles.card}>
-          <div style={{ fontWeight: 600, marginBottom: 10 }}>Spending by Category</div>
-          <ResponsiveContainer width="100%" height={190}>
-            <PieChart>
-              <Pie data={catTotals} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} label={({ name, percent }) => `${name} ${Math.round(percent * 100)}%`} labelLine={false}>
-                {catTotals.map((category, index) => <Cell key={index} fill={category.color} />)}
-              </Pie>
-              <Tooltip formatter={(value) => fmt(value)} contentStyle={{ background: "#1e293b", border: "none", borderRadius: 8, color: "#f1f5f9" }} />
-            </PieChart>
-          </ResponsiveContainer>
+          <div style={{ fontWeight: 700, fontSize: 17, marginBottom: 14 }}>
+            Spending by Category
+          </div>
+
+          {catTotals.length === 0 ? (
+            <div
+              style={{
+                textAlign: "center",
+                color: "var(--text-muted)",
+                padding: 30,
+              }}
+            >
+              No spending data for this month.
+            </div>
+          ) : (
+            <>
+              <div style={{ width: "100%", height: 230 }}>
+                <ResponsiveContainer>
+                  <PieChart>
+                    <Pie
+                      data={catTotals}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={78}
+                      innerRadius={35}
+                      paddingAngle={2}
+                      label={false}
+                      labelLine={false}
+                    >
+                      {catTotals.map((item) => (
+                        <Cell key={item.name} fill={item.color} />
+                      ))}
+                    </Pie>
+
+                    <Tooltip
+                      formatter={(value) => fmt(Number(value || 0))}
+                      contentStyle={{
+                        background: "var(--card-bg)",
+                        border: "1px solid var(--border-color)",
+                        borderRadius: 10,
+                        color: "var(--text-main)",
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))",
+                  gap: 10,
+                  marginTop: 10,
+                }}
+              >
+                {catTotals.map((item) => {
+                  const percent =
+                    totalSpent > 0 ? Math.round((item.value / totalSpent) * 100) : 0;
+
+                  return (
+                    <div
+                      key={item.name}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        fontSize: 13,
+                        color: "var(--text-main)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: 10,
+                          height: 10,
+                          borderRadius: "50%",
+                          background: item.color,
+                          flexShrink: 0,
+                        }}
+                      />
+
+                      <span style={{ flex: 1 }}>{item.name}</span>
+
+                      <strong style={{ color: item.color }}>{percent}%</strong>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
       )}
 
