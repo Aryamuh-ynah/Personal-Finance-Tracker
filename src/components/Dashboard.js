@@ -209,9 +209,9 @@ export default function Dashboard({ data, budgetState, popupState, styles }) {
                         
                       }}
                     />
-                    <span>{item.name}</span>
+                    
                     <span style={{ color: item.color, fontWeight: 700 }}>
-                      {percent}%
+                      {item.name} {percent}%  
                     </span>
 
                     
