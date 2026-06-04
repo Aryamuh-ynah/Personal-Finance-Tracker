@@ -21,7 +21,11 @@ export function downloadStatementPDF({
   budget = 0,
   selectedMonth,
 }) {
-  const doc = new jsPDF();
+  const doc = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4",
+    });
 
   const month = selectedMonth || monthKey(new Date().toISOString());
 
