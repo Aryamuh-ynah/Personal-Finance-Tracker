@@ -137,9 +137,13 @@ finance-tracker/
 
 ## 📸 Screens
 
-| Dashboard                   | Add Income                 | History                    |
-| --------------------------- | -------------------------- | -------------------------- |
-| Net balance, charts, budget | Source, amount, date, note | Filter by month & category |
+| Screen      | Description                                       |
+| ----------- | ------------------------------------------------- |
+| Dashboard   | Net balance, income, expenses, charts, budget     |
+| Add Income  | Add income with source, amount, date, and note    |
+| Add Expense | Add expense with category, amount, date, and note |
+| History     | Filter records by month, type, category, source   |
+| Settings    | Manage budget, theme, dark/light mode, PDF export |
 
 ---
 
