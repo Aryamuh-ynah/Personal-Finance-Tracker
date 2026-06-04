@@ -60,35 +60,55 @@
 }
 
 [data-appearance="light"] {
-  --app-bg: #f8fafc;
-  --card-bg: #ffffff;
-  --input-bg: #f1f5f9;
-  --border-color: #cbd5e1;
   --text-main: #0f172a;
   --text-muted: #64748b;
+  --danger: #ef4444;
+  --success: #16a34a;
+  --warning: #f97316;
+  --popup-overlay: rgba(15, 23, 42, 0.45);
 }
 
 [data-appearance="light"][data-theme="midnight"] {
+  --app-bg: #eef2ff;
+  --card-bg: #ffffff;
+  --input-bg: #f8fafc;
+  --border-color: #c7d2fe;
   --primary: #4f46e5;
   --primary-soft: rgba(79, 70, 229, 0.14);
 }
 
 [data-appearance="light"][data-theme="emerald"] {
+  --app-bg: #ecfdf5;
+  --card-bg: #ffffff;
+  --input-bg: #f0fdf4;
+  --border-color: #a7f3d0;
   --primary: #059669;
   --primary-soft: rgba(5, 150, 105, 0.14);
 }
 
 [data-appearance="light"][data-theme="ocean"] {
+  --app-bg: #f0f9ff;
+  --card-bg: #ffffff;
+  --input-bg: #e0f2fe;
+  --border-color: #bae6fd;
   --primary: #0284c7;
   --primary-soft: rgba(2, 132, 199, 0.14);
 }
 
 [data-appearance="light"][data-theme="sunset"] {
+  --app-bg: #fff7ed;
+  --card-bg: #ffffff;
+  --input-bg: #ffedd5;
+  --border-color: #fed7aa;
   --primary: #d97706;
   --primary-soft: rgba(217, 119, 6, 0.14);
 }
 
 [data-appearance="light"][data-theme="graphite"] {
+  --app-bg: #f7fee7;
+  --card-bg: #ffffff;
+  --input-bg: #f3f4f6;
+  --border-color: #d9f99d;
   --primary: #65a30d;
   --primary-soft: rgba(101, 163, 13, 0.14);
 }

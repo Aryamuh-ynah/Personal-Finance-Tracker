@@ -7,71 +7,279 @@ function ExpensesPopup({ isOpen, onClose, expenses, styles }) {
   if (!isOpen) return null;
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "#000a", zIndex: 200, display: "flex", alignItems: "flex-end" }} onClick={onClose}>
-      <div style={{ background: "#1e293b", borderRadius: "16px 16px 0 0", width: "100%", maxHeight: "60vh", overflowY: "auto", padding: 16 }} onClick={(e) => e.stopPropagation()}>
-        <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 12 }}>💸 This Month&apos;s Expenses</div>
-        {expenses.length === 0 && <div style={{ color: "#64748b", fontSize: 14 }}>No expenses this month.</div>}
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "var(--popup-overlay, rgba(0, 0, 0, 0.55))",
+        zIndex: 200,
+        display: "flex",
+        alignItems: "flex-end",
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          background: "var(--card-bg)",
+          color: "var(--text-main)",
+          border: "1px solid var(--border-color)",
+          borderRadius: "16px 16px 0 0",
+          width: "100%",
+          maxHeight: "60vh",
+          overflowY: "auto",
+          padding: 16,
+          boxShadow: "0 -18px 45px rgba(15, 23, 42, 0.22)",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div
+          style={{
+            fontWeight: 700,
+            fontSize: 16,
+            marginBottom: 12,
+            color: "var(--text-main)",
+          }}
+        >
+          💸 This Month&apos;s Expenses
+        </div>
+
+        {expenses.length === 0 && (
+          <div style={{ color: "var(--text-muted)", fontSize: 14 }}>
+            No expenses this month.
+          </div>
+        )}
+
         {expenses.map((expense) => {
           const meta = catMeta(expense.category, CATEGORIES);
+
           return (
-            <div key={expense.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid #334155" }}>
+            <div
+              key={expense.id}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "10px 8px",
+                borderBottom: "1px solid var(--border-color)",
+              }}
+            >
               <span style={{ fontSize: 20 }}>{meta.icon}</span>
+
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 14 }}>{expense.category}{expense.note ? ` · ${expense.note}` : ""}</div>
-                <div style={{ fontSize: 11, color: "#64748b" }}>{expense.date}</div>
+                <div style={{ fontSize: 14, color: "var(--text-main)" }}>
+                  {expense.category}
+                  {expense.note ? ` · ${expense.note}` : ""}
+                </div>
+
+                <div style={{ fontSize: 11, color: "var(--text-muted)" }}>
+                  {expense.date}
+                </div>
               </div>
-              <span style={{ fontWeight: 700, color: "#f97316" }}>{fmt(expense.amount)}</span>
+
+              <span style={{ fontWeight: 700, color: "var(--warning)" }}>
+                {fmt(Number(expense.amount || 0))}
+              </span>
             </div>
           );
         })}
-        <button style={{ ...styles.btn("#334155"), marginTop: 14 }} onClick={onClose}>Close</button>
+
+        <button
+          type="button"
+          style={{ ...styles.btn("var(--primary)"), marginTop: 14 }}
+          onClick={onClose}
+        >
+          Close
+        </button>
       </div>
     </div>
   );
 }
 
-function IncomePopup({ isOpen, onClose, incomes, expenses, currentMonthIncomes, totalIncome, styles }) {
+function IncomePopup({
+  isOpen,
+  onClose,
+  incomes,
+  expenses,
+  currentMonthIncomes,
+  totalIncome,
+  styles,
+}) {
   if (!isOpen) return null;
 
   const date = new Date();
   date.setMonth(date.getMonth() - 1);
+
   const lastKey = monthKey(date.toISOString());
-  const lastIncome = incomes.filter((income) => monthKey(income.date) === lastKey).reduce((sum, income) => sum + income.amount, 0);
-  const lastExpense = expenses.filter((expense) => monthKey(expense.date) === lastKey).reduce((sum, expense) => sum + expense.amount, 0);
+
+  const lastIncome = incomes
+    .filter((income) => monthKey(income.date) === lastKey)
+    .reduce((sum, income) => sum + Number(income.amount || 0), 0);
+
+  const lastExpense = expenses
+    .filter((expense) => monthKey(expense.date) === lastKey)
+    .reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
+
   const carried = lastIncome - lastExpense;
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "#000a", zIndex: 200, display: "flex", alignItems: "flex-end" }} onClick={onClose}>
-      <div style={{ background: "#1e293b", borderRadius: "16px 16px 0 0", width: "100%", maxHeight: "60vh", overflowY: "auto", padding: 16 }} onClick={(e) => e.stopPropagation()}>
-        <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 12 }}>💰 This Month&apos;s Income</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid #334155", background: carried >= 0 ? "#0f291e" : "#2a0f0f", borderRadius: 8, paddingLeft: 8, marginBottom: 4 }}>
-          <span style={{ fontSize: 20 }}>🔄</span>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 14, fontWeight: 600 }}>Carried Forward</div>
-            <div style={{ fontSize: 11, color: "#64748b" }}>Last month&apos;s leftover ({lastKey})</div>
-          </div>
-          <span style={{ fontWeight: 700, color: carried >= 0 ? "#22c55e" : "#ef4444" }}>{carried >= 0 ? "+" : ""}{fmt(carried)}</span>
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "var(--popup-overlay, rgba(0, 0, 0, 0.55))",
+        zIndex: 200,
+        display: "flex",
+        alignItems: "flex-end",
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          background: "var(--card-bg)",
+          color: "var(--text-main)",
+          border: "1px solid var(--border-color)",
+          borderRadius: "16px 16px 0 0",
+          width: "100%",
+          maxHeight: "60vh",
+          overflowY: "auto",
+          padding: 16,
+          boxShadow: "0 -18px 45px rgba(15, 23, 42, 0.22)",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div
+          style={{
+            fontWeight: 700,
+            fontSize: 16,
+            marginBottom: 12,
+            color: "var(--text-main)",
+          }}
+        >
+          💰 This Month&apos;s Income
         </div>
-        {currentMonthIncomes.length === 0 && <div style={{ color: "#64748b", fontSize: 14, marginTop: 8 }}>No income this month.</div>}
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            padding: "10px 8px",
+            border: "1px solid var(--border-color)",
+            background:
+              carried >= 0
+                ? "rgba(34, 197, 94, 0.12)"
+                : "rgba(239, 68, 68, 0.12)",
+            borderRadius: 10,
+            marginBottom: 8,
+          }}
+        >
+          <span style={{ fontSize: 20 }}>🔄</span>
+
+          <div style={{ flex: 1 }}>
+            <div
+              style={{
+                fontSize: 14,
+                fontWeight: 600,
+                color: "var(--text-main)",
+              }}
+            >
+              Carried Forward
+            </div>
+
+            <div style={{ fontSize: 11, color: "var(--text-muted)" }}>
+              Last month&apos;s leftover ({lastKey})
+            </div>
+          </div>
+
+          <span
+            style={{
+              fontWeight: 700,
+              color: carried >= 0 ? "var(--success)" : "var(--danger)",
+            }}
+          >
+            {carried >= 0 ? "+" : ""}
+            {fmt(carried)}
+          </span>
+        </div>
+
+        {currentMonthIncomes.length === 0 && (
+          <div
+            style={{
+              color: "var(--text-muted)",
+              fontSize: 14,
+              marginTop: 8,
+            }}
+          >
+            No income this month.
+          </div>
+        )}
+
         {currentMonthIncomes.map((income) => {
           const meta = catMeta(income.source, INCOME_SOURCES);
           const hasEmoji = /^\p{Emoji}/u.test(income.source.trim());
+
           return (
-            <div key={income.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid #334155" }}>
+            <div
+              key={income.id}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "10px 8px",
+                borderBottom: "1px solid var(--border-color)",
+              }}
+            >
               <span style={{ fontSize: 20 }}>{meta.icon}</span>
+
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 14 }}>{hasEmoji ? stripEmoji(income.source) : income.source}{income.note ? ` · ${income.note}` : ""}</div>
-                <div style={{ fontSize: 11, color: "#64748b" }}>{income.date}</div>
+                <div style={{ fontSize: 14, color: "var(--text-main)" }}>
+                  {hasEmoji ? stripEmoji(income.source) : income.source}
+                  {income.note ? ` · ${income.note}` : ""}
+                </div>
+
+                <div style={{ fontSize: 11, color: "var(--text-muted)" }}>
+                  {income.date}
+                </div>
               </div>
-              <span style={{ fontWeight: 700, color: "#22c55e" }}>{fmt(income.amount)}</span>
+
+              <span style={{ fontWeight: 700, color: "var(--success)" }}>
+                {fmt(Number(income.amount || 0))}
+              </span>
             </div>
           );
         })}
-        <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 0 4px", borderTop: "1px solid #334155", marginTop: 4 }}>
-          <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 600 }}>Total Available</span>
-          <span style={{ fontWeight: 700, color: "#22c55e" }}>{fmt(totalIncome + Math.max(carried, 0))}</span>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "12px 0 4px",
+            borderTop: "1px solid var(--border-color)",
+            marginTop: 6,
+          }}
+        >
+          <span
+            style={{
+              fontSize: 13,
+              color: "var(--text-muted)",
+              fontWeight: 600,
+            }}
+          >
+            Total Available
+          </span>
+
+          <span style={{ fontWeight: 700, color: "var(--success)" }}>
+            {fmt(Number(totalIncome || 0) + Math.max(carried, 0))}
+          </span>
         </div>
-        <button style={{ ...styles.btn("#334155"), marginTop: 10 }} onClick={onClose}>Close</button>
+
+        <button
+          type="button"
+          style={{ ...styles.btn("var(--primary)"), marginTop: 12 }}
+          onClick={onClose}
+        >
+          Close
+        </button>
       </div>
     </div>
   );
@@ -109,19 +317,6 @@ export default function Dashboard({ data, budgetState, popupState, styles }) {
       <BudgetCard budget={budget} spent={totalSpent} styles={styles} />
 
       {catTotals.length > 0 && (
-        // <div style={styles.card}>
-        //   <div style={{ fontWeight: 600, marginBottom: 10 }}>Spending by Category</div>
-        //   <ResponsiveContainer width="100%" height={190}>
-        //     <PieChart>
-        //       <Pie data={catTotals} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} label={({ name, percent }) => `${name} ${Math.round(percent * 100)}%`} labelLine={false}>
-        //         {catTotals.map((category, index) => <Cell key={index} fill={category.color} />)}
-        //       </Pie>
-        //       <Tooltip formatter={(value) => fmt(value)} contentStyle={{ background: "#1e293b", border: "none", borderRadius: 8, color: "#f1f5f9" }} />
-        //     </PieChart>
-
-            
-        //   </ResponsiveContainer>
-        // </div>
 
         <div style={styles.card}>
           <div style={{ fontWeight: 700, fontSize: 17, marginBottom: 14 }}>
@@ -228,9 +423,22 @@ export default function Dashboard({ data, budgetState, popupState, styles }) {
         <div style={{ fontWeight: 600, marginBottom: 10 }}>6-Month Overview</div>
         <ResponsiveContainer width="100%" height={180}>
           <BarChart data={last6} barCategoryGap="30%">
-            <XAxis dataKey="month" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} />
+            <XAxis
+              dataKey="month"
+              tick={{ fill: "var(--text-muted)", fontSize: 11 }}
+              axisLine={false}
+              tickLine={false}
+            />
             <YAxis hide />
-            <Tooltip formatter={(value) => fmt(value)} contentStyle={{ background: "#1e293b", border: "none", borderRadius: 8, color: "#f1f5f9" }} />
+            <Tooltip
+              formatter={(value) => fmt(Number(value || 0))}
+              contentStyle={{
+                background: "var(--card-bg)",
+                border: "1px solid var(--border-color)",
+                borderRadius: 10,
+                color: "var(--text-main)",
+              }}
+            />
             <Bar dataKey="Income" fill="#22c55e" radius={[4, 4, 0, 0]} />
             <Bar dataKey="Spent" fill="#f97316" radius={[4, 4, 0, 0]} />
           </BarChart>
