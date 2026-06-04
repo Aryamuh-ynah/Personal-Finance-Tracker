@@ -252,17 +252,12 @@ export default function App() {
 
   const allMonths = [...new Set([...expenses.map((expense) => monthKey(expense.date)), ...incomes.map((income) => monthKey(income.date))])].sort().reverse();
   const filteredExp = expenses.filter(
-    (expense) =>
-      monthKey(expense.date) === filterMonth &&
-      (filterCat === "All" || expense.category === filterCat)
+    (expense) => monthKey(expense.date) === filterMonth
   );
 
   const filteredInc = incomes.filter(
-    (income) =>
-      monthKey(income.date) === filterMonth &&
-      (filterCat === "All" || income.source === filterCat)
+    (income) => monthKey(income.date) === filterMonth
   );
-
 
 
   if (loading) {
@@ -313,16 +308,14 @@ export default function App() {
       {tab === "history" && (
         <HistoryPage
           filteredExp={filteredExp}
-          filteredInc={filteredInc}      // new
+          filteredInc={filteredInc}
           filterMonth={filterMonth}
           setFilterMonth={setFilterMonth}
-          filterCat={filterCat}
-          setFilterCat={setFilterCat}
           allMonths={allMonths}
           startEditExp={startEditExp}
           deleteExpense={deleteExpense}
-          startEditInc={startEditInc}    // new
-          deleteIncome={deleteIncome}    // new
+          startEditInc={startEditInc}
+          deleteIncome={deleteIncome}
           styles={styles}
         />
       )}
