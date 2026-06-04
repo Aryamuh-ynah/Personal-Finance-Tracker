@@ -41,29 +41,27 @@ A clean, mobile-friendly personal finance tracker built with React. Track your i
 
 - 🎨 Theme System
 
-The app includes 5 modern color themes:
+  The app includes 5 modern color themes:
+  - Midnight Indigo
+  - Emerald Mint
+  - Ocean Cyan
+  - Sunset Amber
+  - Graphite Lime
 
-- Midnight Indigo
-- Emerald Mint
-- Ocean Cyan
-- Sunset Amber
-- Graphite Lime
-
-Each theme works with both dark and light mode.
+  Each theme works with both dark and light mode.
 
 - 📄 PDF Statement Download
 
-Users can download a monthly finance statement PDF including:
+  Users can download a monthly finance statement PDF including:
+  - Monthly budget
+  - Total income
+  - Total expenses
+  - Net balance
+  - Budget left
+  - Income details
+  - Expense details
 
-- Monthly budget
-- Total income
-- Total expenses
-- Net balance
-- Budget left
-- Income details
-- Expense details
-
-The PDF is generated in A4 format.
+  The PDF is generated in A4 format.
 
 - 💾 **Persistent Storage**
   - Uses browser `localStorage`
