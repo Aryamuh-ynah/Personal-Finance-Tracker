@@ -11,7 +11,12 @@ import Toast from "./components/Toast";
 import { CATEGORIES, DEFAULT_BUDGET, MONTHS } from "./constants/finance";
 import { createStyles, DEFAULT_THEME_ID } from "./styles/appStyles";
 import { fmt, monthKey, today } from "./utils/finance";
+import { downloadStatementPDF } from "./utils/pdfStatement";
 import { loadFinanceData, saveFinanceData } from "./utils/storage";
+
+
+
+
 const emptyExpenseForm = () => ({ amount: "", category: "Food", date: today(), note: "" });
 const emptyIncomeForm = () => ({ amount: "", source: "Salary", date: today(), note: "" });
 
@@ -43,7 +48,7 @@ export default function App() {
   const [appearance, setAppearance] = useState(() => {
     return localStorage.getItem("appearance") || "dark";
   });
-  
+  const [statementMonth, setStatementMonth] = useState(() => monthKey(today()));
 
   const styles = useMemo(() => createStyles(themeId), [themeId]);
   const showToast = (msg, type = "success") => {
@@ -268,6 +273,18 @@ export default function App() {
     ? <div style={{ background: "#7f1d1d", color: "#fca5a5", padding: "8px 16px", fontSize: 13, fontWeight: 600 }}>🚨 Over budget by {fmt(Math.abs(remaining))}!</div>
     : nearBudget ? <div style={{ background: "#78350f", color: "#fcd34d", padding: "8px 16px", fontSize: 13, fontWeight: 600 }}>⚠️ Used {Math.round(pct)}% of budget — be careful!</div> : null;
 
+
+  const downloadStatement = () => {
+    downloadStatementPDF({
+      expenses,
+      incomes,
+      budget,
+      selectedMonth: statementMonth,
+    });
+
+    showToast("Statement PDF downloaded!");
+  };
+
   return (
     <div data-theme={themeId} data-appearance={appearance} style={styles.app}>
       <Toast toast={toast} />
@@ -332,6 +349,12 @@ export default function App() {
           editBudget={editBudget}
           setEditBudget={setEditBudget}
           budget={budget}
+          expenses={expenses}
+          incomes={incomes}
+          statementMonth={statementMonth}
+          setStatementMonth={setStatementMonth}
+          downloadStatement={downloadStatement}
+          allMonths={allMonths}
           styles={styles}
         />
       )}

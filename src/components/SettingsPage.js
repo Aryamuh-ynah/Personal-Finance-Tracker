@@ -1,4 +1,5 @@
 import { THEMES } from "../styles/appStyles";
+import { monthKey, today } from "../utils/finance";
 
 
 export default function SettingsPage({
@@ -12,6 +13,12 @@ export default function SettingsPage({
   editBudget,
   setEditBudget,
   budget,
+  expenses,
+  incomes,
+  statementMonth,
+  setStatementMonth,
+  downloadStatement,
+  allMonths,
   styles,
 }) {
   return (
@@ -150,6 +157,48 @@ export default function SettingsPage({
           </>
         )}
       </section>
+
+
+      <h3 className="settings-section-title">📄 Statement PDF</h3>
+
+      <section className="settings-section">
+        <div style={{ marginBottom: 12 }}>
+          <div style={styles.label}>Statement Month</div>
+
+          <select
+            style={styles.select}
+            value={statementMonth}
+            onChange={(e) => setStatementMonth(e.target.value)}
+          >
+            {(allMonths.length ? allMonths : [monthKey(today())]).map((month) => (
+              <option key={month} value={month}>
+                {month}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <button
+          type="button"
+          style={styles.btn("var(--primary)")}
+          onClick={downloadStatement}
+        >
+          📥 Download Statement PDF
+        </button>
+
+        <p
+          style={{
+            marginTop: 10,
+            fontSize: 12,
+            color: "var(--text-muted)",
+            lineHeight: 1.5,
+          }}
+        >
+          The PDF will include monthly income, expenses, budget, net balance, and
+          transaction details.
+        </p>
+      </section>
+
 
     </main>
   );
