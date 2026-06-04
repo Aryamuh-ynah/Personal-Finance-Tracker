@@ -39,12 +39,31 @@ A clean, mobile-friendly personal finance tracker built with React. Track your i
   - Choose from 5 modern themes
   - Theme selection is saved after reload
 
-- 🎨 **Theme Support**
-  - Midnight Indigo
-  - Emerald Mint
-  - Ocean Cyan
-  - Sunset Amber
-  - Graphite Lime
+- 🎨 Theme System
+
+The app includes 5 modern color themes:
+
+- Midnight Indigo
+- Emerald Mint
+- Ocean Cyan
+- Sunset Amber
+- Graphite Lime
+
+Each theme works with both dark and light mode.
+
+- 📄 PDF Statement Download
+
+Users can download a monthly finance statement PDF including:
+
+- Monthly budget
+- Total income
+- Total expenses
+- Net balance
+- Budget left
+- Income details
+- Expense details
+
+The PDF is generated in A4 format.
 
 - 💾 **Persistent Storage**
   - Uses browser `localStorage`
@@ -58,11 +77,17 @@ A clean, mobile-friendly personal finance tracker built with React. Track your i
 
 ## 🛠️ Tech Stack
 
-| Tool          | Purpose                               |
-| ------------- | ------------------------------------- |
-| React (Hooks) | UI & state management                 |
-| Recharts      | Pie chart & bar chart                 |
-| localStorage  | Browser-based persistent data storage |
+| Tool            | Purpose                               |
+| --------------- | ------------------------------------- |
+| React           | Frontend UI development               |
+| React Hooks     | State management and component logic  |
+| Tailwind CSS    | Utility-first styling                 |
+| CSS Variables   | Theme and dark/light mode support     |
+| Recharts        | Pie chart and bar chart visualization |
+| jsPDF           | PDF statement generation              |
+| jspdf-autotable | PDF table formatting                  |
+| localStorage    | Browser-based persistent data storage |
+| Netlify         | Live deployment                       |
 
 ---
 
@@ -117,6 +142,18 @@ finance-tracker/
 | Dashboard                   | Add Income                 | History                    |
 | --------------------------- | -------------------------- | -------------------------- |
 | Net balance, charts, budget | Source, amount, date, note | Filter by month & category |
+
+---
+
+## 🧮 Main Calculations
+
+```txt
+Total Income = Sum of current month income
+Total Expense = Sum of current month expenses
+Net Balance = Total Income - Total Expense
+Budget Left = Monthly Budget - Total Expense
+Budget Usage = Total Expense / Monthly Budget * 100
+```
 
 ---
 
