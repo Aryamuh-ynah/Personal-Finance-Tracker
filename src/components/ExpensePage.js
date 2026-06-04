@@ -18,7 +18,18 @@ export default function ExpensePage({ editExpId, expForm, setExpForm, addExpense
         </div>
         <div style={{ marginBottom: 12 }}>
           <div style={styles.label}>Date</div>
-          <input style={styles.input} type="date" value={expForm.date} onChange={(e) => setExpForm((form) => ({ ...form, date: e.target.value }))} />
+          <input
+            style={styles.input}
+            type="text"
+            placeholder="YYYY-MM-DD"
+            value={expForm.date}
+            onChange={(e) =>
+              setExpForm((form) => ({
+                ...form,
+                date: e.target.value,
+              }))
+            }
+          />
         </div>
         <div style={{ marginBottom: 20 }}>
           <div style={styles.label}>Note (optional)</div>

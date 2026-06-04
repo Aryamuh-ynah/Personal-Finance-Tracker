@@ -10,14 +10,14 @@ import SettingsPage from "./components/SettingsPage";
 import Toast from "./components/Toast";
 import { CATEGORIES, DEFAULT_BUDGET, MONTHS } from "./constants/finance";
 import { createStyles, DEFAULT_THEME_ID } from "./styles/appStyles";
-import { fmt, monthKey, today } from "./utils/finance";
+import { fmt, monthKey, normalizeDate, today } from "./utils/finance";
 import { downloadStatementPDF } from "./utils/pdfStatement";
 import { loadFinanceData, saveFinanceData } from "./utils/storage";
 
 
 
 
-const emptyExpenseForm = () => ({ amount: "", category: "Food", date: today(), note: "" });
+const emptyExpenseForm = () => ({ amount: "", category: "Food", date: normalizeDate(), note: "" });
 const emptyIncomeForm = () => ({ amount: "", source: "Salary", date: today(), note: "" });
 
 export default function App() {

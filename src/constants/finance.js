@@ -9,6 +9,11 @@ export const CATEGORIES = [
   { name: "Groceries", icon: "🛒", color: "#84cc16" },
   { name: "Lending", icon: "🤝", color: "#f43f5e" },
   { name: "Donations", icon: "🤲", color: "#a78bfa" },
+  {
+    name: "Loan Repaid",
+    icon: "↪️",
+    color: "#f97316",
+  },
   { name: "Other", icon: "📦", color: "#6b7280" },
 ];
 
@@ -19,6 +24,11 @@ export const INCOME_SOURCES = [
   { name: "Gift", icon: "🎁", color: "#ec4899" },
   { name: "Investment", icon: "📈", color: "#eab308" },
   { name: "Loan Received", icon: "🏦", color: "#06b6d4" },
+  {
+    name: "Lending Returned",
+    icon: "↩️",
+    color: "#22c55e",
+  },
   { name: "Other", icon: "💰", color: "#6b7280" },
 ];
 

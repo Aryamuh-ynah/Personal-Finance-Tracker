@@ -10,11 +10,6 @@ export default function IncomePage({
 }) {
   return (
     <div>
-      {/* <div style={{ margin: "16px" }}>
-        <button type="button" style={styles.tabBtn(true)}>
-          ➕ Add Income
-        </button>
-      </div> */}
 
       <div style={styles.card}>
         <div style={{ fontWeight: 700, fontSize: 17, marginBottom: 14 }}>
@@ -61,7 +56,8 @@ export default function IncomePage({
           <div style={styles.label}>Date</div>
           <input
             style={styles.input}
-            type="date"
+            type="text"
+            placeholder="YYYY-MM-DD"
             value={incForm.date}
             onChange={(e) =>
               setIncForm((form) => ({
