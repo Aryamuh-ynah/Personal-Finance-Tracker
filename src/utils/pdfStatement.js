@@ -1,12 +1,18 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { fmt, monthKey } from "./finance";
+import { monthKey } from "./finance";
 
 const formatDate = (date) => {
   if (!date) return "-";
   return date;
 };
+const fmtTK = (value) => {
+  const amount = Number(value || 0);
 
+  return `TK ${amount.toLocaleString("en-US", {
+    maximumFractionDigits: 0,
+  })}`;
+};
 const safeAmount = (value) => Number(value || 0);
 
 export function downloadStatementPDF({
@@ -51,11 +57,11 @@ export function downloadStatementPDF({
     startY: 45,
     head: [["Summary", "Amount"]],
     body: [
-      ["Monthly Budget", fmt(Number(budget || 0))],
-      ["Total Income", fmt(totalIncome)],
-      ["Total Expense", fmt(totalExpense)],
-      ["Net Balance", fmt(netBalance)],
-      ["Budget Left", fmt(budgetLeft)],
+      ["Monthly Budget", fmtTK(Number(budget || 0))],
+      ["Total Income", fmtTK(totalIncome)],
+      ["Total Expense", fmtTK(totalExpense)],
+      ["Net Balance", fmtTK(netBalance)],
+      ["Budget Left", fmtTK(budgetLeft)],
     ],
     theme: "grid",
     headStyles: {
@@ -81,9 +87,9 @@ export function downloadStatementPDF({
             formatDate(income.date),
             income.source || "-",
             income.note || "-",
-            fmt(safeAmount(income.amount)),
+            fmtTK(safeAmount(income.amount)),
           ])
-        : [["-", "No income found", "-", fmt(0)]],
+        : [["-", "No income found", "-", fmtTK(0)]],
     theme: "grid",
     headStyles: {
       fillColor: [22, 163, 74],
@@ -108,9 +114,9 @@ export function downloadStatementPDF({
             formatDate(expense.date),
             expense.category || "-",
             expense.note || "-",
-            fmt(safeAmount(expense.amount)),
+            fmtTK(safeAmount(expense.amount)),
           ])
-        : [["-", "No expense found", "-", fmt(0)]],
+        : [["-", "No expense found", "-", fmtTK(0)]],
     theme: "grid",
     headStyles: {
       fillColor: [239, 68, 68],
