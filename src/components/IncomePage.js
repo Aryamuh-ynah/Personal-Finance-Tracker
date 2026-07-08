@@ -84,7 +84,7 @@ export default function IncomePage({
           />
         </div>
 
-        <button style={styles.btn("#22c55e")} onClick={addIncome}>
+        <button style={styles.btn("var(--primary)")} onClick={addIncome}>
           {editIncId ? "Update Income" : "Add Income"}
         </button>
 

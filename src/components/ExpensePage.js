@@ -35,7 +35,7 @@ export default function ExpensePage({ editExpId, expForm, setExpForm, addExpense
           <div style={styles.label}>Note (optional)</div>
           <input style={styles.input} type="text" placeholder="e.g. Lunch at office" value={expForm.note} onChange={(e) => setExpForm((form) => ({ ...form, note: e.target.value }))} />
         </div>
-        <button style={styles.btn()} onClick={addExpense}>{editExpId ? "Update Expense" : "Add Expense"}</button>
+        <button style={styles.btn("var(--primary)")} onClick={addExpense}>{editExpId ? "Update Expense" : "Add Expense"}</button>
         {editExpId && <button style={{ ...styles.btn("#334155"), marginTop: 10 }} onClick={cancelEditExpense}>Cancel</button>}
       </div>
     </div>
