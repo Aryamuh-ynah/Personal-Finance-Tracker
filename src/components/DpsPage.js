@@ -1,36 +1,17 @@
 import { useState } from "react";
 
-const getCurrentMonth = () => {
+const getCurrentDate = () => {
   const date = new Date();
   const offset = date.getTimezoneOffset();
   const localDate = new Date(date.getTime() - offset * 60 * 1000);
 
-  return localDate.toISOString().slice(0, 7);
-};
-
-const getMonthOptions = (count = 36) => {
-  const options = [];
-  const date = new Date();
-
-  for (let i = 0; i < count; i += 1) {
-    const optionDate = new Date(date.getFullYear(), date.getMonth() + i, 1);
-    const value = optionDate.toISOString().slice(0, 7);
-
-    const label = optionDate.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-    });
-
-    options.push({ value, label });
-  }
-
-  return options;
+  return localDate.toISOString().split("T")[0];
 };
 
 const emptyDpsForm = () => ({
   name: "",
   monthlyAmount: "",
-  startMonth: getCurrentMonth(),
+  startMonth: getCurrentDate(),
   durationMonths: "",
 });
 
@@ -50,7 +31,7 @@ export default function DpsPage({
   styles,
 }) {
   const [form, setForm] = useState(emptyDpsForm());
-  const monthOptions = getMonthOptions();
+
 
   const submitDps = () => {
     const monthlyAmount = Number(form.monthlyAmount || 0);
@@ -67,7 +48,7 @@ export default function DpsPage({
     }
 
     if (!form.startMonth) {
-      alert("Enter start month");
+      alert("Select start date");
       return;
     }
 
@@ -79,7 +60,7 @@ export default function DpsPage({
     addDpsPlan({
       name: form.name.trim(),
       monthlyAmount,
-      startMonth: form.startMonth,
+      startDate: form.startDate,
       durationMonths,
     });
 
@@ -108,33 +89,34 @@ export default function DpsPage({
 
         <div style={{ marginBottom: 12 }}>
           <div style={styles.label}>Monthly Amount</div>
-          <select
-            style={styles.select}
-            value={form.startMonth}
+          <input
+            style={styles.input}
+            type="number"
+            placeholder="e.g. 5000"
+            value={form.monthlyAmount}
             onChange={(e) =>
-                setForm((prev) => ({ ...prev, startMonth: e.target.value }))
+              setForm((prev) => ({
+                ...prev,
+                monthlyAmount: e.target.value,
+              }))
             }
-            >
-            {monthOptions.map((month) => (
-                <option key={month.value} value={month.value}>
-                {month.label}
-                </option>
-            ))}
-            </select>
+          />
         </div>
 
         <div style={{ marginBottom: 12 }}>
-          <div style={styles.label}>Start Month</div>
-          <input
+        <div style={styles.label}>Start Date</div>
+
+        <input
             style={styles.input}
-            type="text"
-            inputMode="numeric"
-            placeholder="YYYY-MM"
-            value={form.startMonth}
+            type="date"
+            value={form.startDate}
             onChange={(e) =>
-                setForm((prev) => ({ ...prev, startMonth: e.target.value }))
+            setForm((prev) => ({
+                ...prev,
+                startDate: e.target.value,
+            }))
             }
-            />
+        />
         </div>
 
         <div style={{ marginBottom: 18 }}>
@@ -228,8 +210,7 @@ export default function DpsPage({
                       marginTop: 4,
                     }}
                   >
-                    Start: {plan.startMonth} · {paidMonths}/{durationMonths}{" "}
-                    months paid
+                    Start: {plan.startDate || plan.startMonth} · {paidMonths}/{durationMonths} months paid
                   </div>
                 </div>
 
