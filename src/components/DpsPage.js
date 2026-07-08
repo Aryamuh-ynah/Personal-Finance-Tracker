@@ -1,10 +1,37 @@
 import { useState } from "react";
 
+const getCurrentMonth = () => {
+  const date = new Date();
+  const offset = date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() - offset * 60 * 1000);
+
+  return localDate.toISOString().slice(0, 7);
+};
+
+const getMonthOptions = (count = 36) => {
+  const options = [];
+  const date = new Date();
+
+  for (let i = 0; i < count; i += 1) {
+    const optionDate = new Date(date.getFullYear(), date.getMonth() + i, 1);
+    const value = optionDate.toISOString().slice(0, 7);
+
+    const label = optionDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+    });
+
+    options.push({ value, label });
+  }
+
+  return options;
+};
+
 const emptyDpsForm = () => ({
   name: "",
   monthlyAmount: "",
-  startMonth: "",
-  durationMonths: "24",
+  startMonth: getCurrentMonth(),
+  durationMonths: "",
 });
 
 const formatTK = (value) => {
@@ -23,6 +50,7 @@ export default function DpsPage({
   styles,
 }) {
   const [form, setForm] = useState(emptyDpsForm());
+  const monthOptions = getMonthOptions();
 
   const submitDps = () => {
     const monthlyAmount = Number(form.monthlyAmount || 0);
@@ -80,30 +108,33 @@ export default function DpsPage({
 
         <div style={{ marginBottom: 12 }}>
           <div style={styles.label}>Monthly Amount</div>
-          <input
-            style={styles.input}
-            type="number"
-            placeholder="e.g. 5000"
-            value={form.monthlyAmount}
+          <select
+            style={styles.select}
+            value={form.startMonth}
             onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                monthlyAmount: e.target.value,
-              }))
+                setForm((prev) => ({ ...prev, startMonth: e.target.value }))
             }
-          />
+            >
+            {monthOptions.map((month) => (
+                <option key={month.value} value={month.value}>
+                {month.label}
+                </option>
+            ))}
+            </select>
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <div style={styles.label}>Start Month</div>
           <input
             style={styles.input}
-            type="month"
+            type="text"
+            inputMode="numeric"
+            placeholder="YYYY-MM"
             value={form.startMonth}
             onChange={(e) =>
-              setForm((prev) => ({ ...prev, startMonth: e.target.value }))
+                setForm((prev) => ({ ...prev, startMonth: e.target.value }))
             }
-          />
+            />
         </div>
 
         <div style={{ marginBottom: 18 }}>
