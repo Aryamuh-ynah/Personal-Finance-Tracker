@@ -13,6 +13,8 @@ export default function SettingsPage({
   editBudget,
   setEditBudget,
   budget,
+  dpsEnabled,
+  setDpsEnabled,
   expenses,
   incomes,
   statementMonth,
@@ -157,6 +159,54 @@ export default function SettingsPage({
           </>
         )}
       </section>
+    <h3 className="settings-section-title">🏦 DPS Tracker</h3>
+
+    <section className="settings-section">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 16,
+        }}
+      >
+        <div>
+          <div
+            style={{
+              fontWeight: 800,
+              color: "var(--text-main)",
+              marginBottom: 4,
+            }}
+          >
+            Show DPS tab
+          </div>
+
+          <div
+            style={{
+              color: "var(--text-muted)",
+              fontSize: 13,
+              lineHeight: 1.5,
+            }}
+          >
+            Turn this on to show a separate DPS tracker tab in the bottom
+            navigation.
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className={`appearance-toggle ${
+            dpsEnabled ? "appearance-toggle-light" : "appearance-toggle-dark"
+          }`}
+          onClick={() => setDpsEnabled(!dpsEnabled)}
+          aria-label="Toggle DPS tracker tab"
+        >
+          <span className="appearance-toggle-icon">
+            {dpsEnabled ? "🏦" : "—"}
+          </span>
+        </button>
+      </div>
+    </section>
 
 
       <h3 className="settings-section-title">📄 Statement PDF</h3>

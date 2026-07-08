@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import "./App.css";
 import BottomNav from "./components/BottomNav";
 import Dashboard from "./components/Dashboard";
+import DpsPage from "./components/DpsPage";
 import ExpensePage from "./components/ExpensePage";
 import Header from "./components/Header";
 import HistoryPage from "./components/HistoryPage";
@@ -13,7 +14,6 @@ import { createStyles, DEFAULT_THEME_ID } from "./styles/appStyles";
 import { fmt, monthKey, normalizeDate, today } from "./utils/finance";
 import { downloadStatementPDF } from "./utils/pdfStatement";
 import { loadFinanceData, saveFinanceData } from "./utils/storage";
-
 
 const emptyExpenseForm = () => ({ amount: "", category: "Food", date: normalizeDate(), note: "" });
 const emptyIncomeForm = () => ({ amount: "", source: "Salary", date: today(), note: "" });
@@ -358,7 +358,7 @@ export default function App() {
           styles={styles}
         />
       )}
-      
+
       {tab === "dps" && dpsEnabled && <DpsPage styles={styles} />}
       
       {tab === "settings" && (
