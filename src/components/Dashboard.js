@@ -50,29 +50,30 @@ function HiddenAmount({
 
       <button
         type="button"
+        className="amount-eye-btn"
         onClick={(e) => {
           e.stopPropagation();
           setVisible(true);
         }}
-        style={{
-          border: "1px solid var(--border-color)",
-          background: "var(--input-bg)",
-          color: "var(--text-muted)",
-          borderRadius: 999,
-          width: 30,
-          height: 30,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-          fontSize: 14,
-          flexShrink: 0,
-        }}
         aria-label="Show amount"
         title="Show amount"
       >
-        👁️
+        <svg
+          width="19"
+          height="19"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
       </button>
+
     </div>
   );
 }

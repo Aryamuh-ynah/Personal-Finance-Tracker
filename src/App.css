@@ -229,6 +229,27 @@
 .appearance-toggle:hover {
   filter: brightness(1.08);
 }
+/* Amount eye button styles */
+.amount-eye-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: 0.15s ease;
+}
+
+.amount-eye-btn:hover {
+  filter: brightness(1.12);
+  transform: scale(1.04);
+}
+/* Theme selection styles */
 
 .theme-grid {
   @apply grid grid-cols-1 gap-3;
