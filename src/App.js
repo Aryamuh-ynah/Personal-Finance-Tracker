@@ -367,6 +367,8 @@ export default function App() {
           setThemeId={setThemeId}
           appearance={appearance}
           setAppearance={setAppearance}
+          dpsEnabled={dpsEnabled}
+          setDpsEnabled={setDpsEnabled}
           budgetInput={budgetInput}
           setBudgetInput={setBudgetInput}
           saveBudget={saveBudget}

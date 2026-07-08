@@ -178,7 +178,7 @@ export default function SettingsPage({
               marginBottom: 4,
             }}
           >
-            Show DPS tab
+            Start DPS Tracking
           </div>
 
           <div
