@@ -37,3 +37,21 @@ export function saveFinanceData(expenses, incomes, budget) {
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
+
+const DPS_STORAGE_KEY = "finance-tracker-dps";
+
+export function loadDpsPlans() {
+  const raw = localStorage.getItem(DPS_STORAGE_KEY);
+
+  if (!raw) {
+    return [];
+  }
+
+  const data = JSON.parse(raw);
+
+  return Array.isArray(data) ? data : [];
+}
+
+export function saveDpsPlans(dpsPlans) {
+  localStorage.setItem(DPS_STORAGE_KEY, JSON.stringify(dpsPlans));
+}

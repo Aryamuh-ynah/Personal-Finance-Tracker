@@ -13,7 +13,7 @@ import { CATEGORIES, DEFAULT_BUDGET, MONTHS } from "./constants/finance";
 import { createStyles, DEFAULT_THEME_ID } from "./styles/appStyles";
 import { fmt, monthKey, normalizeDate, today } from "./utils/finance";
 import { downloadStatementPDF } from "./utils/pdfStatement";
-import { loadFinanceData, saveFinanceData } from "./utils/storage";
+import { loadFinanceData, saveDpsPlans, saveFinanceData } from "./utils/storage";
 
 const emptyExpenseForm = () => ({ amount: "", category: "Food", date: normalizeDate(), note: "" });
 const emptyIncomeForm = () => ({ amount: "", source: "Salary", date: today(), note: "" });
@@ -27,6 +27,7 @@ export default function App() {
   });
   const [expenses, setExpenses] = useState([]);
   const [incomes, setIncomes] = useState([]);
+  const [dpsPlans, setDpsPlans] = useState([]); 
   const [budget, setBudget] = useState(DEFAULT_BUDGET);
   const [editBudget, setEditBudget] = useState(false);
   const [budgetInput, setBudgetInput] = useState(String(DEFAULT_BUDGET));
@@ -307,6 +308,52 @@ export default function App() {
     showToast("Statement PDF downloaded!");
   };
 
+
+  const saveDps = (nextDpsPlans) => {
+    try {
+      saveDpsPlans(nextDpsPlans);
+      setDpsPlans(nextDpsPlans);
+      showToast("DPS updated!");
+    } catch (error) {
+      console.error("Failed to save DPS data:", error);
+      showToast("Could not save DPS data", "error");
+    }
+  };
+
+  const addDpsPlan = (plan) => {
+    const newPlan = {
+      id: crypto.randomUUID(),
+      paidMonths: 0,
+      ...plan,
+    };
+
+    saveDps([newPlan, ...dpsPlans]);
+  };
+
+  const markDpsPaid = (id) => {
+    const nextDpsPlans = dpsPlans.map((plan) => {
+      if (plan.id !== id) return plan;
+
+      return {
+        ...plan,
+        paidMonths: Math.min(
+          Number(plan.paidMonths || 0) + 1,
+          Number(plan.durationMonths || 0)
+        ),
+      };
+    });
+
+    saveDps(nextDpsPlans);
+  };
+
+  const deleteDpsPlan = (id) => {
+    const confirmDelete = window.confirm("Delete this DPS plan?");
+    if (!confirmDelete) return;
+
+    const nextDpsPlans = dpsPlans.filter((plan) => plan.id !== id);
+    saveDps(nextDpsPlans);
+  };
+  
   return (
     <div data-theme={themeId} data-appearance={appearance} style={styles.app}>
       <Toast toast={toast} />
@@ -359,7 +406,15 @@ export default function App() {
         />
       )}
 
-      {tab === "dps" && dpsEnabled && <DpsPage styles={styles} />}
+      {tab === "dps" && dpsEnabled && (
+        <DpsPage
+          dpsPlans={dpsPlans}
+          addDpsPlan={addDpsPlan}
+          markDpsPaid={markDpsPaid}
+          deleteDpsPlan={deleteDpsPlan}
+          styles={styles}
+        />
+      )}
       
       {tab === "settings" && (
         <SettingsPage
