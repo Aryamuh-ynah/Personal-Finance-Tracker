@@ -106,17 +106,22 @@ export default function DpsPage({
         <div style={{ marginBottom: 12 }}>
         <div style={styles.label}>Start Date</div>
 
-        <input
-            style={styles.input}
+            <input
+            id="dps-start-date"
+            style={{
+                ...styles.input,
+                paddingRight: 48,
+                colorScheme: "dark",
+            }}
             type="date"
             value={form.startDate}
             onChange={(e) =>
-            setForm((prev) => ({
+                setForm((prev) => ({
                 ...prev,
                 startDate: e.target.value,
-            }))
+                }))
             }
-        />
+            />
         </div>
 
         <div style={{ marginBottom: 18 }}>
