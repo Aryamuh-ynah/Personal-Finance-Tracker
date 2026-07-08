@@ -110,7 +110,21 @@ export default function App() {
     (sum, income) => sum + Number(income.amount || 0),
     0
   );
-  const netBalance = totalIncome - totalSpent;
+  
+
+  const currentMonth = monthKey(today())
+  const previousIncome = incomes
+    .filter((income) => monthKey(income.date) < currentMonth)
+    .reduce((sum, income) => sum + Number(income.amount || 0), 0);
+
+  const previousExpense = expenses
+    .filter((expense) => monthKey(expense.date) < currentMonth)
+    .reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
+
+  const carriedForward = previousIncome - previousExpense;
+
+  const netBalance = carriedForward + totalIncome - totalSpent;
+
   const safeBudget = Number(budget) || 0;
   const remaining = safeBudget - totalSpent;
   const pct = safeBudget > 0 ? Math.min((totalSpent / safeBudget) * 100, 100) : 0;
@@ -293,7 +307,7 @@ export default function App() {
 
       {tab === "dashboard" && (
         <Dashboard
-          data={{ netBalance, totalIncome, totalSpent, thisMonthExp, thisMonthInc, catTotals, last6 }}
+          data={{ netBalance, carriedForward, totalIncome, totalSpent, thisMonthExp, thisMonthInc, catTotals, last6 }}
           budgetState={{ budget, budgetInput, editBudget, setBudgetInput, setEditBudget, saveBudget, remaining, pct, overBudget, nearBudget }}
           popupState={{ showExpPopup, setShowExpPopup, showIncPopup, setShowIncPopup, expenses, incomes }}
           styles={styles}

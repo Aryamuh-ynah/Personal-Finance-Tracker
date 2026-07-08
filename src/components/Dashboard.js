@@ -1,6 +1,6 @@
 import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { CATEGORIES, INCOME_SOURCES } from "../constants/finance";
-import { catMeta, fmt, monthKey, stripEmoji } from "../utils/finance";
+import { catMeta, fmt, stripEmoji } from "../utils/finance";
 import BudgetCard from "./BudgetCard";
 
 function ExpensesPopup({ isOpen, onClose, expenses, styles }) {
@@ -100,26 +100,27 @@ function IncomePopup({
   onClose,
   incomes,
   expenses,
+  carriedForward,
   currentMonthIncomes,
   totalIncome,
   styles,
 }) {
   if (!isOpen) return null;
 
-  const date = new Date();
-  date.setMonth(date.getMonth() - 1);
+  // const date = new Date();
+  // date.setMonth(date.getMonth() - 1);
 
-  const lastKey = monthKey(date.toISOString());
+  // const lastKey = monthKey(date.toISOString());
 
-  const lastIncome = incomes
-    .filter((income) => monthKey(income.date) === lastKey)
-    .reduce((sum, income) => sum + Number(income.amount || 0), 0);
+  // const lastIncome = incomes
+  //   .filter((income) => monthKey(income.date) === lastKey)
+  //   .reduce((sum, income) => sum + Number(income.amount || 0), 0);
 
-  const lastExpense = expenses
-    .filter((expense) => monthKey(expense.date) === lastKey)
-    .reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
+  // const lastExpense = expenses
+  //   .filter((expense) => monthKey(expense.date) === lastKey)
+  //   .reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
 
-  const carried = lastIncome - lastExpense;
+  const carried = Number(carriedForward || 0);
 
   return (
     <div
@@ -187,7 +188,7 @@ function IncomePopup({
             </div>
 
             <div style={{ fontSize: 11, color: "var(--text-muted)" }}>
-              Last month&apos;s leftover ({lastKey})
+              Previous balance
             </div>
           </div>
 
@@ -269,7 +270,7 @@ function IncomePopup({
           </span>
 
           <span style={{ fontWeight: 700, color: "var(--success)" }}>
-            {fmt(Number(totalIncome || 0) + Math.max(carried, 0))}
+            {fmt(Number(totalIncome || 0) + carried)}
           </span>
         </div>
 
@@ -286,16 +287,16 @@ function IncomePopup({
 }
 
 export default function Dashboard({ data, budgetState, popupState, styles }) {
-  const { netBalance, totalIncome, totalSpent, thisMonthExp, thisMonthInc, catTotals, last6 } = data;
+  const { netBalance, carriedForward, totalIncome, totalSpent, thisMonthExp, thisMonthInc, catTotals, last6 } = data;
   const { budget } = budgetState;
   const { showExpPopup, setShowExpPopup, showIncPopup, setShowIncPopup, expenses, incomes } = popupState;
 
   return (
     <div>
       <div style={{ ...styles.card, background: netBalance >= 0 ? "#0f2922" : "#2a0f0f", border: `1px solid ${netBalance >= 0 ? "#22c55e33" : "#ef444433"}` }}>
-        <div style={styles.label}>Net Balance (This Month)</div>
+        <div style={styles.label}>Available Balance (This Month)</div>
         <div style={{ fontSize: 34, fontWeight: 800, color: netBalance >= 0 ? "#22c55e" : "#ef4444" }}>{netBalance >= 0 ? "+" : ""}{fmt(netBalance)}</div>
-        <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>Income − Expenses</div>
+        
       </div>
 
       <div style={styles.row}>
@@ -312,7 +313,7 @@ export default function Dashboard({ data, budgetState, popupState, styles }) {
       </div>
 
       <ExpensesPopup isOpen={showExpPopup} onClose={() => setShowExpPopup(false)} expenses={thisMonthExp} styles={styles} />
-      <IncomePopup isOpen={showIncPopup} onClose={() => setShowIncPopup(false)} incomes={incomes} expenses={expenses} currentMonthIncomes={thisMonthInc} totalIncome={totalIncome} styles={styles} />
+      <IncomePopup isOpen={showIncPopup} onClose={() => setShowIncPopup(false)} incomes={incomes} expenses={expenses} currentMonthIncomes={thisMonthInc} totalIncome={totalIncome} carriedForward={carriedForward} styles={styles} />
 
       <BudgetCard budget={budget} spent={totalSpent} styles={styles} />
 
