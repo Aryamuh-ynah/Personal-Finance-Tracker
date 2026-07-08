@@ -1,7 +1,81 @@
+import { useEffect, useState } from "react";
 import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { CATEGORIES, INCOME_SOURCES } from "../constants/finance";
 import { catMeta, fmt, stripEmoji } from "../utils/finance";
 import BudgetCard from "./BudgetCard";
+
+
+function HiddenAmount({
+  amount,
+  color,
+  fontSize = 20,
+  showSign = false,
+  align = "left",
+}) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (!visible) return undefined;
+
+    const timer = setTimeout(() => {
+      setVisible(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [visible]);
+
+  const amountText = `${showSign && Number(amount) > 0 ? "+" : ""}${fmt(
+    Number(amount || 0)
+  )}`;
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: align === "right" ? "flex-end" : "flex-start",
+        gap: 8,
+      }}
+    >
+      <span
+        style={{
+          fontSize,
+          fontWeight: 800,
+          color,
+          letterSpacing: visible ? 0 : 1.5,
+        }}
+      >
+        {visible ? amountText : "••••••"}
+      </span>
+
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          setVisible(true);
+        }}
+        style={{
+          border: "1px solid var(--border-color)",
+          background: "var(--input-bg)",
+          color: "var(--text-muted)",
+          borderRadius: 999,
+          width: 30,
+          height: 30,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          fontSize: 14,
+          flexShrink: 0,
+        }}
+        aria-label="Show amount"
+        title="Show amount"
+      >
+        👁️
+      </button>
+    </div>
+  );
+}
 
 function ExpensesPopup({ isOpen, onClose, expenses, styles }) {
   if (!isOpen) return null;
@@ -293,22 +367,52 @@ export default function Dashboard({ data, budgetState, popupState, styles }) {
 
   return (
     <div>
-      <div style={{ ...styles.card, background: netBalance >= 0 ? "#0f2922" : "#2a0f0f", border: `1px solid ${netBalance >= 0 ? "#22c55e33" : "#ef444433"}` }}>
+      <div
+        style={{
+          ...styles.card,
+          background: netBalance >= 0 ? "#0f2922" : "#2a0f0f",
+          border: `1px solid ${netBalance >= 0 ? "#22c55e33" : "#ef444433"}`,
+        }}
+      >
         <div style={styles.label}>Available Balance (This Month)</div>
-        <div style={{ fontSize: 34, fontWeight: 800, color: netBalance >= 0 ? "#22c55e" : "#ef4444" }}>{netBalance >= 0 ? "+" : ""}{fmt(netBalance)}</div>
-        
+
+        <HiddenAmount
+          amount={netBalance}
+          showSign
+          fontSize={34}
+          color={netBalance >= 0 ? "#22c55e" : "#ef4444"}
+        />
       </div>
 
       <div style={styles.row}>
-        <div style={{ ...styles.halfCard, cursor: "pointer" }} onClick={() => setShowIncPopup(true)}>
-          <div style={{ fontSize: 11, color: "#94a3b8" }}>💰 Income</div>
-          <div style={{ fontSize: 20, fontWeight: 700, color: "#22c55e" }}>{fmt(totalIncome)}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>{thisMonthInc.length} entries</div>
+        <div
+          style={{ ...styles.halfCard, cursor: "pointer" }}
+          onClick={() => setShowIncPopup(true)}
+        >
+          <div style={{ fontSize: 11, color: "var(--text-muted)" }}>
+            💰 Income
+          </div>
+
+          <HiddenAmount amount={totalIncome} fontSize={20} color="#22c55e" />
+
+          <div style={{ fontSize: 11, color: "var(--text-muted)" }}>
+            {thisMonthInc.length} entries
+          </div>
         </div>
-        <div style={{ ...styles.halfCard, cursor: "pointer" }} onClick={() => setShowExpPopup(true)}>
-          <div style={{ fontSize: 11, color: "#94a3b8" }}>💸 Spent</div>
-          <div style={{ fontSize: 20, fontWeight: 700, color: "#f97316" }}>{fmt(totalSpent)}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>{thisMonthExp.length} transactions</div>
+
+        <div
+          style={{ ...styles.halfCard, cursor: "pointer" }}
+          onClick={() => setShowExpPopup(true)}
+        >
+          <div style={{ fontSize: 11, color: "var(--text-muted)" }}>
+            💸 Spent
+          </div>
+
+          <HiddenAmount amount={totalSpent} fontSize={20} color="#f97316" />
+
+          <div style={{ fontSize: 11, color: "var(--text-muted)" }}>
+            {thisMonthExp.length} transactions
+          </div>
         </div>
       </div>
 
