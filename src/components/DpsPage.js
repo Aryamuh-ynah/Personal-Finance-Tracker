@@ -166,17 +166,24 @@ export default function DpsPage({
         )}
 
         {dpsPlans.map((plan) => {
-          const paidMonths = Number(plan.paidMonths || 0);
-          const durationMonths = Number(plan.durationMonths || 0);
-          const monthlyAmount = Number(plan.monthlyAmount || 0);
+            const currentMonth = new Date().toISOString().slice(0, 7);
 
-          const totalTarget = monthlyAmount * durationMonths;
-          const savedAmount = monthlyAmount * paidMonths;
-          const remainingAmount = Math.max(totalTarget - savedAmount, 0);
-          const progress =
+            const payments = Array.isArray(plan.payments) ? plan.payments : [];
+
+            const paidMonths = payments.length || Number(plan.paidMonths || 0);
+            const durationMonths = Number(plan.durationMonths || 0);
+            const monthlyAmount = Number(plan.monthlyAmount || 0);
+
+            const isCurrentMonthPaid = payments.includes(currentMonth);
+
+            const totalTarget = monthlyAmount * durationMonths;
+            const savedAmount = monthlyAmount * paidMonths;
+            const remainingAmount = Math.max(totalTarget - savedAmount, 0);
+
+            const progress =
             durationMonths > 0
-              ? Math.min((paidMonths / durationMonths) * 100, 100)
-              : 0;
+                ? Math.min((paidMonths / durationMonths) * 100, 100)
+                : 0;
 
           return (
             <div
@@ -289,21 +296,15 @@ export default function DpsPage({
                 </div>
               </div>
 
-              <button
-                type="button"
-                disabled={paidMonths >= durationMonths}
-                onClick={() => markDpsPaid(plan.id)}
-                style={{
-                  ...styles.btn(
-                    paidMonths >= durationMonths ? "#64748b" : "var(--primary)"
-                  ),
-                  cursor: paidMonths >= durationMonths ? "not-allowed" : "pointer",
-                }}
-              >
-                {paidMonths >= durationMonths
-                  ? "Completed"
-                  : "Mark This Month Paid"}
-              </button>
+                {paidMonths < durationMonths && !isCurrentMonthPaid && (
+                <button
+                    type="button"
+                    onClick={() => markDpsPaid(plan.id)}
+                    style={styles.btn("var(--primary)")}
+                >
+                    Mark This Month Paid
+                </button>
+                )}
             </div>
           );
         })}

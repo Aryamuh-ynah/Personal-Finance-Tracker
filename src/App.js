@@ -329,21 +329,62 @@ export default function App() {
 
     saveDps([newPlan, ...dpsPlans]);
   };
-
+// DPS tracking functions
   const markDpsPaid = (id) => {
+    const currentMonth = monthKey(today());
+
+    const selectedPlan = dpsPlans.find((plan) => plan.id === id);
+
+    if (!selectedPlan) return;
+
+    const payments = Array.isArray(selectedPlan.payments)
+      ? selectedPlan.payments
+      : [];
+
+    if (payments.includes(currentMonth)) {
+      showToast("This month's DPS is already paid", "error");
+      return;
+    }
+
+    const monthlyAmount = Number(selectedPlan.monthlyAmount || 0);
+
+    if (!monthlyAmount || monthlyAmount <= 0) {
+      showToast("Invalid DPS amount", "error");
+      return;
+    }
+
     const nextDpsPlans = dpsPlans.map((plan) => {
       if (plan.id !== id) return plan;
 
+      const nextPayments = [
+        ...(Array.isArray(plan.payments) ? plan.payments : []),
+        currentMonth,
+      ];
+
       return {
         ...plan,
-        paidMonths: Math.min(
-          Number(plan.paidMonths || 0) + 1,
-          Number(plan.durationMonths || 0)
-        ),
+        payments: nextPayments,
+        paidMonths: nextPayments.length,
       };
     });
 
-    saveDps(nextDpsPlans);
+    const dpsExpense = {
+      id: crypto.randomUUID(),
+      amount: monthlyAmount,
+      category: "DPS / Savings",
+      date: today(),
+      note: `${selectedPlan.name} DPS paid for ${currentMonth}`,
+    };
+
+    const nextExpenses = [dpsExpense, ...expenses];
+
+    saveDpsPlans(nextDpsPlans);
+    setDpsPlans(nextDpsPlans);
+
+    if (!save(nextExpenses, incomes, budget)) return;
+
+    setExpenses(nextExpenses);
+    showToast("DPS payment added to expenses!");
   };
 
   const deleteDpsPlan = (id) => {
@@ -407,14 +448,14 @@ export default function App() {
       )}
 
       {tab === "dps" && dpsEnabled && (
-        <DpsPage
-          dpsPlans={dpsPlans}
-          addDpsPlan={addDpsPlan}
-          markDpsPaid={markDpsPaid}
-          deleteDpsPlan={deleteDpsPlan}
-          styles={styles}
-        />
-      )}
+      <DpsPage
+        dpsPlans={dpsPlans}
+        addDpsPlan={addDpsPlan}
+        markDpsPaid={markDpsPaid}
+        deleteDpsPlan={deleteDpsPlan}
+        styles={styles}
+      />
+    )}
       
       {tab === "settings" && (
         <SettingsPage
