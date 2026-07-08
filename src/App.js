@@ -15,15 +15,16 @@ import { downloadStatementPDF } from "./utils/pdfStatement";
 import { loadFinanceData, saveFinanceData } from "./utils/storage";
 
 
-
-
 const emptyExpenseForm = () => ({ amount: "", category: "Food", date: normalizeDate(), note: "" });
 const emptyIncomeForm = () => ({ amount: "", source: "Salary", date: today(), note: "" });
 
 export default function App() {
   const [tab, setTab] = useState(() => {
-  return localStorage.getItem("activeTab") || "dashboard";
-});
+    return localStorage.getItem("activeTab") || "dashboard";
+  });
+  const [dpsEnabled, setDpsEnabled] = useState(() => {
+    return localStorage.getItem("dpsEnabled") === "true";
+  });
   const [expenses, setExpenses] = useState([]);
   const [incomes, setIncomes] = useState([]);
   const [budget, setBudget] = useState(DEFAULT_BUDGET);
@@ -82,6 +83,13 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("appearance", appearance);
   }, [appearance]);
+  useEffect(() => {
+    localStorage.setItem("dpsEnabled", String(dpsEnabled));
+
+    if (!dpsEnabled && tab === "dps") {
+      setTab("dashboard");
+    }
+  }, [dpsEnabled, tab]);
 
   const save = useCallback((nextExpenses, nextIncomes, nextBudget) => {
     setSaving(true);
@@ -351,6 +359,8 @@ export default function App() {
         />
       )}
       
+      {tab === "dps" && dpsEnabled && <DpsPage styles={styles} />}
+      
       {tab === "settings" && (
         <SettingsPage
           themeId={themeId}
@@ -373,7 +383,12 @@ export default function App() {
         />
       )}
 
-      <BottomNav tab={tab} setTab={setTab} styles={styles} />
+      <BottomNav
+        tab={tab}
+        setTab={setTab}
+        dpsEnabled={dpsEnabled}
+        styles={styles}
+      />
 
       {deleteConfirm && (
         <div className="delete-modal-overlay">
